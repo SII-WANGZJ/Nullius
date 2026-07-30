@@ -60,11 +60,12 @@ analysis code, we reproduce the released benchmark accuracies to within
 $5\times10^{-4}$. We then show that both experiments carrying the
 computational conclusion are scored under sample-level splits that place
 repeated measurements of the same physical pair in training and test.
-Re-evaluating with the pair as the unit of generalisation, and adding an exact
-permutation null over all 105 admissible category assignments
-($p = 102/105$), a self-pair ablation, and a mirror-pair grouping, we find
-that the released evaluations do not distinguish a relation-specific signal
-from pair identity together with structural cues in the label design. The
+Re-evaluating with the pair rather than the camera repeat as the unit of
+generalisation, and adding an exact permutation null over all 105 admissible
+category assignments ($p = 102/105$), the removal of pairs in which a token is
+paired with itself, and the grouping of each ordered pair with its reverse, we
+find that the released evaluations do not distinguish a relation-specific
+signal from pair identity together with structural cues in the label design. The
 benchmarks remain valid demonstrations that repeated measurements from a
 fixed, previously observed pair library are decodable; they do not, under the
 released evaluation protocol, establish relation-specific structure, semantic
@@ -126,6 +127,17 @@ position on the reported hardware automation, which we did not audit.
 Section~\ref{sec:caveats} makes the boundaries explicit.
 
 \section{Audit scope and evaluation design}
+
+We first fix the vocabulary, because much of it belongs to the audited work
+rather than to us. Yang et al.\ report three studies and number them Results
+2, 3 and 4. This audit concerns \emph{Result 4}, the open-ended study from
+which the optical bilinear interaction is claimed; we keep the original
+numbering so that every reference can be checked against the source. Within
+it, \emph{Complex-B} is their name for the complex per-channel quantity
+recovered by four-step demodulation, and \emph{Tasks A} to \emph{D} are their
+names for the four classification tasks defined in
+Sec.~\ref{sec:setup}. Terms of our own are marked where they first appear.
+
 \subsection{Summary of findings}
 \label{sec:summary}
 
@@ -144,17 +156,18 @@ what does not is the substance of this paper.
 \toprule
 Claim (as supported publicly) & Audit test & Finding & What remains supported \\
 \midrule
-XOR interaction, at sample-level $1.000$ & pair, mirror and token grouping
-& not retained under any pair-respecting split & repeated measurements of the
-16 fixed pairs are decodable \\
+XOR interaction, at sample-level $1.000$ & grouping by pair, by reverse pair,
+and by token & not retained under any split that keeps a pair's repeats
+together & repeated measurements of the 16 fixed pairs are decodable \\
 \addlinespace
 Semantic relation, at high sample-level accuracy & grouped CV plus exact label
 permutation & designated partition not exceptional ($102/105$, exact) & pair
 identity is decodable \\
 \addlinespace
-Task D transfer, Complex-B above chance & identity rule and $2\times2$
-ablation & above-chance value present only with self-pairs on both sides &
-a decodable difference exists under the fixed protocol \\
+Task D transfer, Complex-B above chance & a measurement-free baseline, and a
+$2\times2$ ablation & above chance only when pairs of a token with itself are
+present in both training and test & a decodable difference exists under the
+fixed protocol \\
 \addlinespace
 Attention analogy, from a bilinear observable & operator comparison
 & weak form only & a fixed physical pair-feature primitive \\
@@ -261,13 +274,19 @@ as pair identity (A, 64-way), same category (B, binary), category pair (C,
 (D). We keep these names throughout, and mark terms of our own where they
 first appear.
 
-Three further terms recur below. A \emph{codebook} is the fixed mapping from
-token index to the random-phase input field that encodes it. A \emph{full
+Several further terms recur below, and we fix them here. A \emph{codebook} is
+the mapping from token index to the input field that encodes it. A \emph{full
 readout} uses every detector channel produced by a given binning, whereas
 \emph{sparse taps} use a selected subset of them, and the \emph{output budget}
-is the number of channels retained. \emph{Pseudo-$B$} denotes the authors'
-control in which the physical transmission operator is replaced by a random
-complex Gaussian matrix.
+is the number of channels retained. \emph{Pseudo-$B$} is the authors' control
+in which the physical transmission operator is replaced by a random complex
+Gaussian matrix. Of the 64 ordered pairs, we call the eight of the form
+$(x,x)$ \emph{self-pairs}, and we call $(y,x)$ the \emph{mirror} of $(x,y)$; a
+split is \emph{pair-respecting} when the repeated measurements of a pair, and
+where stated its mirror, are kept on the same side of the train/test
+boundary. The \emph{identity rule} is the baseline that predicts ``same
+category'' exactly when the two tokens are identical, using the pair labels
+and no measurement at all.
 
 All material below derives from the authors' own deposit
 (DOI \href{https://doi.org/10.5281/zenodo.19890402}{10.5281/zenodo.19890402}).
@@ -835,10 +854,10 @@ released materials, not that it is absent.
 \subsection{Architectural attribution}
 
 A separate attribution problem sits beneath the provenance one, and survives
-even if the trajectory were accepted as fully autonomous. The manuscript
-credits specific architectural components---Meta-Trace, the dual-layer
-separation, role--phase decoupling, accumulated research experience---with
-sustaining the long-horizon trajectory. A single successful run cannot
+even if the trajectory were accepted as fully autonomous. The audited preprint
+credits specific components of its agent system---the ones it names Meta-Trace,
+the dual-layer separation, role--phase decoupling and accumulated research
+experience---with sustaining the long-horizon trajectory. A single successful run cannot
 identify which component, if any, produced the outcome. The released material
 contains no single-agent baseline, no run with Meta-Trace replaced by ordinary
 rolling summarisation, no fixed-workflow comparison, no ablation of the
