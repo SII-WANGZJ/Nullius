@@ -1,12 +1,3 @@
 cache/
 __pycache__/
 *.pyc
-
-# The authors' deposit is not redistributed here; fetch it from Zenodo.
-../SM_Source_Materials_CORE_5REPORTS/
-
-# LaTeX build products
-../paper/*.aux
-../paper/*.log
-../paper/*.out
-../paper/figs/_prev*.png

@@ -1,0 +1,19 @@
+# The authors' deposit is NOT redistributed here.
+# Fetch it from DOI 10.5281/zenodo.19890402 and unpack it beside this repo;
+# audit/results/input_manifest.json records a SHA-256 for every file consumed.
+SM_Source_Materials_CORE_5REPORTS/
+*.tar.gz
+2604.27092v1.pdf
+
+# Audit working files
+audit/cache/
+__pycache__/
+*.pyc
+
+# LaTeX build products
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/figs/_prev*.png
+paper/pg-*.png
