@@ -1,4 +1,4 @@
-<h1 align="center">nullius</h1>
+<h1 align="center">Nullius</h1>
 
 <p align="center">
   <strong>A reproducible audit of the computational claims in arXiv:2604.27092</strong><br>
