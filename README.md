@@ -1,7 +1,13 @@
 <h1 align="center">nullius</h1>
 
 <p align="center">
-  <em>Nullius in verba</em> — on the word of no one.
+  <strong>A reproducible audit of the computational claims in arXiv:2604.27092</strong><br>
+  <em>End-to-end autonomous scientific discovery on a real optical platform</em>
+</p>
+
+<p align="center">
+  <em>Nullius in verba</em> — on the word of no one.<br>
+  <sub>The motto of the Royal Society: take nobody's word for it, check the thing yourself.</sub>
 </p>
 
 <p align="center">
