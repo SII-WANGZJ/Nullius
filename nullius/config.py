@@ -38,7 +38,7 @@ REPO_DIR = os.path.dirname(PKG_DIR)
 #: Not redistributed here; see results/input_manifest.json for per-file digests.
 DEPOSIT_DIR = os.environ.get(
     "NULLIUS_DEPOSIT",
-    os.path.join(REPO_DIR, "SM_Source_Materials_CORE_5REPORTS"))
+    os.path.join(REPO_DIR, "data", "SM_Source_Materials_CORE_5REPORTS"))
 
 FRAME_DIR = os.path.join(DEPOSIT_DIR, "shared_raw_data", "result4_frame_data")
 SEMANTIC_DATA_DIR = os.path.join(FRAME_DIR, "exp_complex_B_semantic")
@@ -57,5 +57,6 @@ def require_deposit() -> None:
     if not os.path.isdir(SEMANTIC_DATA_DIR):
         raise SystemExit(
             f"Deposit not found at:\n  {DEPOSIT_DIR}\n\n"
-            "Download it from https://doi.org/10.5281/zenodo.19890402, unpack\n"
-            "it beside this repository, or set NULLIUS_DEPOSIT to its path.")
+            "See data/README.md. In short: download it from\n"
+            "https://doi.org/10.5281/zenodo.19890402, unpack it under data/,\n"
+            "or set NULLIUS_DEPOSIT to wherever it already lives.")

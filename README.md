@@ -58,9 +58,9 @@ every value the optical feature attains under that protocol.
 That is the point of the repository, and it takes about two minutes.
 
 ```bash
-conda env create -f environment.yml && conda activate discovery-audit
-export NULLIUS_DEPOSIT=/path/to/SM_Source_Materials_CORE_5REPORTS   # from Zenodo
+pip install -r requirements.txt
 
+# put the Zenodo deposit under data/  (see data/README.md), then:
 python experiments/01_replicate_and_ablate.py
 ```
 
@@ -82,11 +82,11 @@ First run reads ~1500 `.npy` frames (~8 s per bin size); binned arrays cache to
 
 ## Design rule
 
-`src/nullius/data.py` and `src/nullius/features.py` **mirror the released
-pipeline exactly** — same loading, binning, four-step demodulation, classifier
-and folds as `analyze_advantage_boundary.py` in the deposit. Everything that
-departs from it lives in `src/nullius/scoring.py` and is named for the
-assumption it changes.
+`nullius/data.py` and `nullius/features.py` **mirror the released pipeline
+exactly** — same loading, binning, four-step demodulation, classifier and
+folds as `analyze_advantage_boundary.py` in the deposit. Everything that
+departs from it lives in `nullius/scoring.py` and is named for the assumption
+it changes.
 
 Replication runs first, by construction. If it fails, nothing downstream
 means anything.
@@ -137,6 +137,7 @@ produces repeatable optical measurements. It does.
 ```
 nullius/        config · data · features · scoring   (mirror vs. modification, separated)
 experiments/    numbered, runnable, one concern each
+data/           where the authors' deposit goes; only its README is tracked
 docs/           pre-registration · prior-art matrix · rebuttal stress test · change log
 results/        JSON output; *.reference.json are pre-refactor snapshots
 paper/          manuscript source, figures, compiled PDF

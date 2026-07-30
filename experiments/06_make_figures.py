@@ -94,12 +94,13 @@ def fig1_taskD(audit):
 
     ax.axvline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
     ax.axvline(ident, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=2)
-    top = len(rows) - 0.28                 # line annotations
-    hdr = len(rows) + 0.36                 # column headers, one line higher
-    ax.text(0.49, top, "chance", color=MUTED, ha="right", va="bottom", fontsize=7)
-    ax.text(ident + 0.012, top,
+    hdr = len(rows) + 0.10                 # column headers, above the bars
+    foot = -0.52                           # rule labels, below the bars
+    ax.text(0.5, foot, "chance", color=MUTED, ha="center", va="center",
+            fontsize=7)
+    ax.text(ident, foot,
             "identity rule $(x{=}y)$ $=$ " + f"{ident:.3f}",
-            color=INK2, ha="left", va="bottom", fontsize=7)
+            color=INK2, ha="center", va="center", fontsize=7)
 
     # values live in their own columns, so nothing collides with the rules
     ax.text(COL_R, hdr, "released", color=MUTED, ha="right", va="bottom", fontsize=6.5)
@@ -114,10 +115,11 @@ def fig1_taskD(audit):
     ax.set_yticks(y, labels, color=INK2, fontsize=8)
     ax.set_xticks(np.arange(0, 0.9, 0.2))
     ax.set_xlim(0, 1.05)
-    ax.set_ylim(-0.60, len(rows) + 0.85)
-    ax.set_xlabel("balanced accuracy, Task D (cross-split same category)")
+    ax.set_ylim(-0.85, len(rows) + 0.55)
+    ax.set_xlabel("balanced accuracy, Task D (cross-split same category)",
+                  labelpad=8)
     style_axes(ax)
-    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.38, -0.20),
+    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.38, -0.24),
               ncol=2, fontsize=7.5, labelcolor=INK2, handlelength=1.2)
 
     fig.tight_layout()
@@ -132,12 +134,12 @@ def fig2_leakage(audit, robust):
     """(a) Tasks B/C released vs pair-grouped;  (b) Task C fold-count sweep."""
     lk = audit["B3_leakage_bin25"]
     feats = [("complex_B", "Complex-B"),
-             ("digital_bilinear", "Digital bilinear"),
+             ("digital_bilinear", "Digital\nbilinear"),
              ("concat", "Concat")]
 
     fig, (axB, axC, axS) = plt.subplots(
-        1, 3, figsize=(6.9, 2.5),
-        gridspec_kw={"width_ratios": [1.0, 1.0, 1.15], "wspace": 0.45})
+        1, 3, figsize=(7.1, 2.6),
+        gridspec_kw={"width_ratios": [1.0, 1.0, 1.1], "wspace": 0.5})
 
     for ax, task, chance, title in (
             (axB, "B", 0.5, "Task B  (binary)"),
@@ -153,8 +155,8 @@ def fig2_leakage(audit, robust):
             ax.text(xx, v + 0.03, f"{v:.2f}", ha="center", fontsize=6.5, color=INK2)
         for xx, v in zip(x + w / 2 + 0.01, grp):
             ax.text(xx, v + 0.03, f"{v:.2f}", ha="center", fontsize=6.5, color=INK2)
-        ax.set_xticks(x, [n for _, n in feats], fontsize=7, color=INK2,
-                      rotation=18, ha="right")
+        ax.set_xticks(x, [n for _, n in feats], fontsize=6.3, color=INK2,
+                      linespacing=1.2)
         ax.set_xlim(-0.55, len(feats) - 0.45)
         ax.set_ylim(0, 1.28)
         ax.set_title(title, fontsize=8, color=INK, pad=6)
