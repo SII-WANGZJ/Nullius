@@ -276,9 +276,8 @@ def fig5_xor(x):
     tb, ex = x["X1_X3_X8_taskB"], x["X9_X10_exhaustive"]
     xs = np.arange(len(regimes))
     fig, ax = plt.subplots(figsize=(6.9, 3.0))
-    ax.axhspan(0.44, 0.56, color=GRID, alpha=0.55, zorder=1)
     ax.axhline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
-    ax.text(len(regimes) - 0.52, 0.505, "chance", color=MUTED, fontsize=6.5,
+    ax.text(len(regimes) - 0.52, 0.508, "chance", color=MUTED, fontsize=6.5,
             ha="right", va="bottom")
 
     for key, label, col, mk in fams:

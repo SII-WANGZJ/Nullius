@@ -53,11 +53,14 @@ chance, and same-category classification is not significant under the exact
 null distribution over all 105 admissible category assignments
 ($p=102/105$). In the held-out-category task, above-chance performance occurs
 only when self-pairs are present in both the training and the test set;
-removing them from either side returns accuracy to chance. The second
-experiment supporting the same conclusion, a four-token XOR showcase, behaves
-the same way: its released accuracy of $1.000$ is obtained under a
-sample-level split and is not retained under any split that keeps a pair's
-repeated measurements together. We emphasise what we do \emph{not} claim: we find no evidence in the inspected data that the
+removing them from either side leaves no evidence of above-chance transfer.
+The second experiment supporting the same conclusion, a four-token XOR
+showcase, behaves the same way: its released accuracy of $1.000$ is obtained
+under a sample-level split and is not retained under any split that keeps a
+pair's repeated measurements together. What both benchmarks establish is
+decodability of the fixed, already-measured pairs, not generalisation of a
+relation to unseen pairs or unseen tokens. We emphasise what we do \emph{not}
+claim: we find no evidence in the inspected data that the
 measurements were fabricated or internally inconsistent, and the reported
 hardware automation may be substantial but is not evaluated by this audit.
 The failure is one of evidence--claim alignment within the specific experiment
@@ -142,6 +145,49 @@ admissible label assignments where one can be enumerated.
 Readout parameters, feature budgets and splits must be fixed before the
 comparison of interest, or the search over them must be reported in full.
 
+\section{Summary of findings}
+\label{sec:summary}
+
+Table~\ref{tab:summary} states each claim we examined, what the public
+material establishes, the test applied, and---in the final column---the
+conclusion that survives our audit. That column is not a courtesy. Several of
+the original observations remain intact under our re-analysis, and the
+distinction between what survives and what does not is the substance of this
+paper.
+
+\begin{table}[t]
+\centering\small
+\caption{Claims examined, tests applied, and what still stands.}
+\label{tab:summary}
+\begin{tabular}{p{2.2cm}p{2.5cm}p{2.7cm}p{2.2cm}p{3.3cm}}
+\toprule
+Claim & Public material shows & Audit test & Outcome & Minimum conclusion that stands \\
+\midrule
+XOR interaction & sample-level $1.000$ & pair, mirror and token grouping
+& not retained & repeated measurements of the 16 fixed pairs are decodable \\
+\addlinespace
+Semantic relation & high sample-level accuracy & grouped CV plus exact label
+permutation & designated partition not exceptional ($102/105$) & pair identity
+is decodable \\
+\addlinespace
+Task D transfer & Complex-B above chance & identity rule and $2\times2$
+ablation & learned self-pair shortcut & a decodable difference exists under
+the fixed protocol \\
+\addlinespace
+Attention analogy & a bilinear observable & operator comparison
+& weak form only & a fixed physical pair-feature primitive \\
+\addlinespace
+Physical novelty & a measurable cross term & internal consistency of the
+released characterisation & not established & the cross term is measurable on
+the platform \\
+\addlinespace
+Autonomous discovery & trajectory narrative and resource counts &
+provenance and ablation audit & not attributable & the automation may be
+substantial; this audit does not evaluate it \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Case study: setup}
 \label{sec:setup}
 
@@ -166,6 +212,20 @@ All material below derives from the authors' own deposit
 Our pipeline mirrors
 \code{05\_result4\_refine\_paper/scripts/analyze\_advantage\_boundary.py}
 so that any difference is attributable to a single documented modification.
+
+\paragraph{Pre-specification of our own analyses.}
+Since we ask the original work for pre-registration (Sec.~\ref{sec:search}),
+we state our own status plainly. The XOR audit of Sec.~\ref{sec:xor} was
+pre-specified: the ten tests, the splitting regimes and the reporting rule
+that all three possible outcomes would be published were written into the
+repository README and committed before the analysis was run. The
+semantic-benchmark analyses of Secs.~\ref{sec:benchmark}--\ref{sec:ideal} were
+\emph{not} pre-specified in that sense; they were exploratory, developed while
+reading the released code. We mitigated this in three ways---exact replication
+before any modification, exact rather than sampled null distributions where
+the label space could be enumerated, and adversarial self-checks against the
+objections we could anticipate---but the distinction is real and we do not
+blur it. Readers should weight the pre-specified XOR result accordingly.
 
 \subsection{Replication}
 \label{sec:replication}
@@ -217,10 +277,13 @@ fixed-holdout protocol of the main manuscript, or to the higher values the
 supplement obtains under searched sparse-tap and output-budget
 configurations; those are exactly the configurations whose selection timing
 the public record does not document (Sec.~\ref{sec:search}). Removing all
-self-paired samples collapses the optical feature to chance
-(Fig.~\ref{fig:D}), identically at both readout scales, while the per-fold
-values are constant to four decimals in the unablated case---the signature of
-a deterministic structural cue rather than a learned relation.
+self-paired samples leaves no evidence of above-chance transfer
+(Fig.~\ref{fig:D}; $0.4979$ and $0.4948$ at the two readout scales),
+identically at both, while the per-fold values are constant to four decimals
+in the unablated case---the signature of a deterministic structural cue rather
+than a learned relation. We report the ablated values as point estimates
+against a $0.500$ reference; with 2 distinct positive pairs per fold after
+ablation we attach no confidence statement to their exact magnitude.
 
 \begin{figure}[t]
 \centering
@@ -240,8 +303,12 @@ unaffected by the ablation.}
 
 \subsection{B3: Tasks A--C are inflated by repeat leakage}
 
-Throughout this subsection, ``leakage'' means leakage relative to a claim of
-out-of-pair or semantic generalisation. If the tasks were intended only to ask
+Leakage of this kind---correlated repeated measurements of the same unit
+distributed across folds---is a documented and widespread failure mode in
+machine-learning-based science~\cite{kapoor}, with quantified inflation
+reported when the grouping unit is ignored~\cite{rosenblatt}. Throughout this
+subsection, ``leakage'' means leakage relative to a claim of out-of-pair or
+semantic generalisation. If the tasks were intended only to ask
 whether repeated measurements of an already-observed pair can be recognised,
 splitting repeats at random is legitimate; the tasks then simply cannot
 support claims about category structure or new pairs.
@@ -307,8 +374,11 @@ Digital bilinear & C (16-way)  & 0.4437 & 0.1709 & $-0.2729$ \\
 \subsection{B4: the residual Task-B accuracy is not significant}
 
 Pair-grouped scoring leaves Task B at $0.6522$, above the binary chance level.
-This residual admits an exact test. The same-category label is fixed entirely
-by a partition of the eight tokens into four unlabelled two-token categories,
+This residual admits an exact test, in the label-permutation family
+of~\cite{ojala}: because the admissible label assignments can be enumerated,
+the permutation null is exact rather than sampled. The same-category label is
+fixed entirely by a partition of the eight tokens into four unlabelled
+two-token categories,
 and there are $8!/((2!)^4 4!) = 105$ such partitions. We therefore recompute
 the pair-grouped Task-B accuracy under every admissible assignment. The
 designated semantic assignment is a member of this set, so the exact one-sided
@@ -341,10 +411,12 @@ interventions, and crossing them separates a cue that the classifier acquires
 during fitting from a structural shortcut sitting in the test set.
 Table~\ref{tab:2x2} gives the full design. Above-chance performance occurs
 only when self-pairs are present on \emph{both} sides; removing them from
-either side returns accuracy to chance. In particular, when self-pairs are
-present at test time but absent during training, accuracy is $0.4917$---the
-shortcut is available but unused. This is a learned self-pair shortcut under
-this evaluation protocol. We note the small effective sample: each held-out
+either side leaves no evidence of above-chance transfer. In particular, when
+self-pairs are present at test time but absent during training, accuracy is
+$0.4917$---the shortcut is available but unused. This is a learned self-pair
+shortcut under this evaluation protocol, in the sense of~\cite{geirhos}: a cue
+that is predictive within the evaluation as constructed, and that the
+classifier adopts in preference to the intended relation. We note the small effective sample: each held-out
 fold contributes only 4 distinct positive pairs (2 after ablation) against 24
 distinct negatives.
 
@@ -401,9 +473,13 @@ undefined here, since a held-out ordered pair contains a single class.
 Complex-B gives $0.5000$ (ordered-pair $K$-fold), $0.6250$ (unordered-pair
 $K$-fold), $0.5875$ (exhaustive leave-one-ordered-pair-out), $0.3750$
 (exhaustive leave-one-unordered-group-out) and $0.4979$ when a token is
-excluded from training entirely. None of these is distinguishable from chance
-at this sample size, and their non-monotone ordering should not be
-interpreted.
+excluded from training entirely. We report these as point estimates against a
+$0.500$ reference. Their test sets differ in size and in dependence structure,
+so we neither pool them nor attach a common uncertainty band, and their
+non-monotone ordering should not be interpreted. What they share is that the
+released value of $1.0000$ is not retained once repeated observations of the
+test pair are excluded from training, and that no above-chance transfer is
+observed under any of them.
 
 One grouped value does require explanation. The digital bilinear baseline
 reaches $0.8125$ under ordered-pair grouping, above Complex-B. This is a
@@ -451,6 +527,40 @@ carries an identical feature vector. Lines join points of the same feature
 family and do not imply a continuum.}
 \label{fig:xor}
 \end{figure}
+
+\subsection{The strongest reading available to the original evaluation}
+\label{sec:defence}
+
+The findings above are not a claim that the reported accuracies are wrong. We
+reproduce every one of them. They are a claim about what those accuracies
+establish, and it is worth stating the authors' strongest position explicitly
+rather than leaving it to be raised in reply.
+
+That position is that the released tasks were never intended to demonstrate
+generalisation to unseen pairs. On this reading, the sample-level split is an
+appropriate test of measurement stability and of linear decodability on a
+fixed, fully measured pair library; the XOR construction serves to illustrate
+the representational capacity of a bilinear feature relative to an additive
+linear readout; and the staged reports do qualify the claim, describing the
+result as holding ``under the tested evaluation protocol''.
+
+We accept that reading, and under it the released numbers stand. Our point is
+what follows from it. A sample-level evaluation over a fixed pair library
+cannot separate three distinct hypotheses: that the feature encodes the
+relation, that it encodes pair identity from which a memorised label table is
+recovered, or that it exploits a structural cue such as the self-pair
+alignment. Because Task A shows that Complex-B resolves all 16---and all
+64---observed pairs perfectly, the second hypothesis alone suffices to produce
+the reported relation accuracies, and no relation-specific structure in the
+measurement is required. The evidence is therefore consistent with the
+measurement being informative about the observed pairs, and does not
+discriminate among the mechanisms that could produce that.
+
+This matters because the manuscript's interpretation does not stay at the
+level of observed-pair decodability. Claims about semantic relational
+structure, about pairwise relational computation, and about analogy to
+attention are all claims about a relation that transfers. That transfer is
+what the released evaluations do not test.
 
 \section{Model--measurement consistency: a diagnostic observation}
 \label{sec:ideal}
@@ -879,17 +989,40 @@ the roll-up digest over all 1543 consumed files is
 subsequent change to the deposit is detectable. The environment is pinned in
 \code{environment.yml} and \code{requirements-lock.txt}.
 
-\begin{thebibliography}{9}\small
+\begin{thebibliography}{99}\small
 \bibitem{qiushi} S.~Yang \emph{et al.},
   \emph{End-to-end autonomous scientific discovery on a real optical
   platform}, arXiv:2604.27092 (2026).
 \bibitem{zenodo} S.~Yang, Source materials, DOI 10.5281/zenodo.19890402 (2026).
+
+\bibitem{kapoor} S.~Kapoor and A.~Narayanan,
+  \emph{Leakage and the reproducibility crisis in machine-learning-based
+  science}, Patterns \textbf{4}, 100804 (2023).
+  % supports: leakage as a documented, cross-disciplinary failure mode;
+  % motivates auditing split logic rather than headline accuracy.
+\bibitem{rosenblatt} M.~Rosenblatt \emph{et al.},
+  \emph{Data leakage inflates prediction performance in connectome-based
+  machine learning models}, Nat.\ Commun.\ \textbf{15}, 1829 (2024).
+  % supports: quantified inflation when correlated repeats cross folds.
+\bibitem{ojala} M.~Ojala and G.~C.~Garriga,
+  \emph{Permutation tests for studying classifier performance},
+  J.\ Mach.\ Learn.\ Res.\ \textbf{11}, 1833--1863 (2010).
+  % supports: the label-permutation null of Sec. B4; the exact enumeration
+  % is the finite-population form of their label-permutation test.
+\bibitem{geirhos} R.~Geirhos \emph{et al.},
+  \emph{Shortcut learning in deep neural networks},
+  Nat.\ Mach.\ Intell.\ \textbf{2}, 665--673 (2020).
+  % supports: self-pair cue and mirror reuse as shortcuts; the distinction
+  % between intended and exploited structure.
+
 \bibitem{popoff} S.~M.~Popoff \emph{et al.},
   \emph{Measuring the transmission matrix in optics}, Phys.\ Rev.\ Lett.\
   \textbf{104}, 100601 (2010).
 \bibitem{hamerly} R.~Hamerly \emph{et al.},
   \emph{Large-scale optical neural networks based on photoelectric
   multiplication}, Phys.\ Rev.\ X \textbf{9}, 021032 (2019).
+  % supports: square-law detection as an established route to optical
+  % inner products, relevant to the novelty question.
 \bibitem{attention} A.~Vaswani \emph{et al.},
   \emph{Attention is all you need}, NeurIPS \textbf{30} (2017).
 \end{thebibliography}
