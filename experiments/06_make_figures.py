@@ -21,8 +21,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
-import common as C
-
+import _path  # noqa: F401  (puts src/ on sys.path)
+import nullius as N
 # --- palette (validated: all-pairs CVD dE 24.7, normal-vision 33.6) ----------
 BLUE = "#2a78d6"      # categorical slot 1 -- "as released"
 ORANGE = "#eb6834"    # categorical slot 2 -- audit modification
@@ -33,8 +33,7 @@ GRID = "#e1e0d9"
 AXIS = "#c3c2b7"
 SURFACE = "#fcfcfb"
 
-FIG_DIR = os.path.join(os.path.dirname(C.AUDIT_DIR), "paper", "figs")
-os.makedirs(FIG_DIR, exist_ok=True)
+FIG_DIR = N.FIG_DIR
 
 plt.rcParams.update({
     "font.family": "sans-serif",
@@ -54,7 +53,7 @@ plt.rcParams.update({
 
 
 def load(name):
-    with open(os.path.join(C.RESULTS_DIR, name), encoding="utf-8") as fh:
+    with open(os.path.join(N.RESULTS_DIR, name), encoding="utf-8") as fh:
         return json.load(fh)
 
 
@@ -195,8 +194,8 @@ def fig2_leakage(audit, robust):
 # ---------------------------------------------------------------------------
 def fig3_repeat_correlation():
     """Distribution of pairwise repeat correlations of the Complex-B feature."""
-    single, blank, pair = C.load_all_data_binned(25)
-    B_per_rep = C.compute_B_per_repeat(blank, pair)
+    single, blank, pair = N.load_all_data_binned(25)
+    B_per_rep = N.compute_B_per_repeat(blank, pair)
     cors = []
     for arr in B_per_rep.values():
         v = np.concatenate([arr.real, arr.imag], axis=1)

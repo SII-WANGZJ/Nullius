@@ -16,13 +16,13 @@ import hashlib
 import json
 import os
 
-import common as C
-
+import _path  # noqa: F401  (puts src/ on sys.path)
+import nullius as N
 TARGETS = [
-    ("frame_data", os.path.join(C.PACKAGE_DIR, "shared_raw_data",
+    ("frame_data", os.path.join(N.DEPOSIT_DIR, "shared_raw_data",
                                 "result4_frame_data", "exp_complex_B_semantic")),
-    ("result4_scripts", os.path.join(C.PACKAGE_DIR, "04_result4_paper", "scripts")),
-    ("result5_scripts", os.path.join(C.PACKAGE_DIR, "05_result4_refine_paper", "scripts")),
+    ("result4_scripts", os.path.join(N.DEPOSIT_DIR, "04_result4_paper", "scripts")),
+    ("result5_scripts", os.path.join(N.DEPOSIT_DIR, "05_result4_refine_paper", "scripts")),
 ]
 TOP_LEVEL = ["README.md", "MANIFEST.md", "SM_SCOPE_AND_RELATION_TO_MANUSCRIPT_SI.md",
              "DATA_AVAILABILITY_DRAFT.md", "SM_Reproducibility_Guide.pdf"]
@@ -37,7 +37,7 @@ def sha256(path: str, chunk: int = 1 << 20) -> str:
 
 
 def main() -> int:
-    manifest = {"deposit_root": os.path.basename(C.PACKAGE_DIR), "groups": {}}
+    manifest = {"deposit_root": os.path.basename(N.DEPOSIT_DIR), "groups": {}}
 
     for name, root in TARGETS:
         if not os.path.isdir(root):
@@ -47,7 +47,7 @@ def main() -> int:
         for dirpath, _, files in os.walk(root):
             for f in sorted(files):
                 p = os.path.join(dirpath, f)
-                rel = os.path.relpath(p, C.PACKAGE_DIR).replace("\\", "/")
+                rel = os.path.relpath(p, N.DEPOSIT_DIR).replace("\\", "/")
                 entries[rel] = {"sha256": sha256(p), "bytes": os.path.getsize(p)}
                 total += os.path.getsize(p)
         manifest["groups"][name] = {"n_files": len(entries), "total_bytes": total,
@@ -56,7 +56,7 @@ def main() -> int:
 
     top = {}
     for f in TOP_LEVEL:
-        p = os.path.join(C.PACKAGE_DIR, f)
+        p = os.path.join(N.DEPOSIT_DIR, f)
         if os.path.exists(p):
             top[f] = {"sha256": sha256(p), "bytes": os.path.getsize(p)}
     manifest["groups"]["deposit_documents"] = {"n_files": len(top), "files": top}
@@ -71,7 +71,7 @@ def main() -> int:
     manifest["rollup_sha256"] = rollup
     print(f"\n  rollup SHA-256 of all consumed inputs:\n  {rollup}")
 
-    out = os.path.join(C.RESULTS_DIR, "input_manifest.json")
+    out = os.path.join(N.RESULTS_DIR, "input_manifest.json")
     with open(out, "w", encoding="utf-8") as fh:
         json.dump(manifest, fh, indent=2)
     print(f"\nwrote {out}")

@@ -30,15 +30,15 @@ from sklearn.model_selection import (StratifiedKFold, StratifiedGroupKFold,
                                      cross_val_score)
 from sklearn.metrics import balanced_accuracy_score
 
-import common as C
-
+import _path  # noqa: F401  (puts src/ on sys.path)
+import nullius as N
 warnings.filterwarnings("ignore", category=UserWarning)
 
 N_TOKENS = 4
 BIN_SIZE = 25                      # authors' setting: 500/25 -> 400 channels
 N_REPS = 5
 PHASE = ["0", "pi2", "pi", "3pi2"]
-DATA = os.path.join(C.PACKAGE_DIR, "shared_raw_data", "result4_frame_data",
+DATA = os.path.join(N.DEPOSIT_DIR, "shared_raw_data", "result4_frame_data",
                     "exp_bilinear_001", "exp_bilinear_001")
 
 PAIRS = [(x, y) for x in range(N_TOKENS) for y in range(N_TOKENS)]
@@ -48,7 +48,7 @@ XOR = {(x, y): (x + y) % 2 for (x, y) in PAIRS}
 # ---------------------------------------------------------------------------
 def load():
     def rd(p):
-        return C.bin_roi(np.load(p), BIN_SIZE)
+        return N.bin_roi(np.load(p), BIN_SIZE)
 
     single = {t: np.array([rd(os.path.join(DATA, "singles",
               f"single_t{t}_rep{r:02d}.npy")) for r in range(N_REPS)])
@@ -302,7 +302,7 @@ def main() -> int:
         print(f"  {r['partition']:14s} {str(r['balanced_acc']):>8s}   {r['status']}{tag}")
     rep["X6_partition_enumeration"] = en
 
-    out = os.path.join(C.RESULTS_DIR, "xor_audit_results.json")
+    out = os.path.join(N.RESULTS_DIR, "xor_audit_results.json")
     with open(out, "w", encoding="utf-8") as fh:
         json.dump(rep, fh, indent=2)
     print(f"\nwrote {out}")

@@ -1,0 +1,645 @@
+{
+  "experiment": "exp_bilinear_001",
+  "bin": 25,
+  "X2_label_structure": {
+    "n_positive_pairs": 8,
+    "n_negative_pairs": 8,
+    "self_pairs_positive": 0,
+    "symmetric": true
+  },
+  "X5_measurement_free": {
+    "x == y  -> label 0, else 1": 0.75,
+    "always majority class": 0.5,
+    "group identity (oracle {0,2}/{1,3})": 1.0
+  },
+  "X1_X3_X8_taskB": {
+    "concat": {
+      "sample_level": 0.4125,
+      "ordered_pair_grouped": 0.25,
+      "unordered_pair_grouped": 0.1875,
+      "leave_one_token_out": 0.1667,
+      "leave_one_token_detail": [
+        {
+          "held_token": 0,
+          "balanced_acc": 0.1667,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 1,
+          "balanced_acc": 0.1667,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 2,
+          "balanced_acc": 0.1667,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 3,
+          "balanced_acc": 0.1667,
+          "n_train": 45,
+          "n_test": 35
+        }
+      ],
+      "taskA_sample_level": 1.0,
+      "taskA_grouped_status": "degenerate: one class per group"
+    },
+    "digital_bilinear": {
+      "sample_level": 1.0,
+      "ordered_pair_grouped": 0.8125,
+      "unordered_pair_grouped": 0.3125,
+      "leave_one_token_out": 0.375,
+      "leave_one_token_detail": [
+        {
+          "held_token": 0,
+          "balanced_acc": 0.5,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 1,
+          "balanced_acc": 0.5,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 2,
+          "balanced_acc": 0.25,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 3,
+          "balanced_acc": 0.25,
+          "n_train": 45,
+          "n_test": 35
+        }
+      ],
+      "taskA_sample_level": 0.625,
+      "taskA_grouped_status": "degenerate: one class per group"
+    },
+    "complex_B": {
+      "sample_level": 1.0,
+      "ordered_pair_grouped": 0.5,
+      "unordered_pair_grouped": 0.625,
+      "leave_one_token_out": 0.4979,
+      "leave_one_token_detail": [
+        {
+          "held_token": 0,
+          "balanced_acc": 0.4917,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 1,
+          "balanced_acc": 0.5417,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 2,
+          "balanced_acc": 0.4167,
+          "n_train": 45,
+          "n_test": 35
+        },
+        {
+          "held_token": 3,
+          "balanced_acc": 0.5417,
+          "n_train": 45,
+          "n_test": 35
+        }
+      ],
+      "taskA_sample_level": 1.0,
+      "taskA_grouped_status": "degenerate: one class per group"
+    }
+  },
+  "X9_X10_exhaustive": {
+    "concat": {
+      "leave_one_ordered_pair_out": 0.0,
+      "leave_one_unordered_group_out": 0.0,
+      "n_pooled_ordered": 80,
+      "n_pooled_unordered": 80,
+      "per_group_ordered": [
+        {
+          "group": 0,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 1,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 2,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 3,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 4,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 5,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 6,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 7,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 8,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 9,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 10,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 11,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 12,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 13,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 14,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 15,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        }
+      ],
+      "per_group_unordered": [
+        {
+          "group": 0,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 1,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 2,
+          "n_test": 10,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 3,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 5,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 6,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 7,
+          "n_test": 10,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 10,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 11,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 15,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        }
+      ]
+    },
+    "digital_bilinear": {
+      "leave_one_ordered_pair_out": 0.8125,
+      "leave_one_unordered_group_out": 0.0625,
+      "n_pooled_ordered": 80,
+      "n_pooled_unordered": 80,
+      "per_group_ordered": [
+        {
+          "group": 0,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 1,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 2,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 3,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 4,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 5,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 6,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 7,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 8,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 9,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 10,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 11,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 12,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 13,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 14,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 15,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        }
+      ],
+      "per_group_unordered": [
+        {
+          "group": 0,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 1,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 2,
+          "n_test": 10,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 3,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 5,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 6,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 7,
+          "n_test": 10,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 10,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 11,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 15,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        }
+      ]
+    },
+    "complex_B": {
+      "leave_one_ordered_pair_out": 0.5875,
+      "leave_one_unordered_group_out": 0.375,
+      "n_pooled_ordered": 80,
+      "n_pooled_unordered": 80,
+      "per_group_ordered": [
+        {
+          "group": 0,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 1,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 2,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 3,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 4,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.4
+        },
+        {
+          "group": 5,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 6,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 7,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 8,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 9,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 10,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 11,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 12,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 13,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 14,
+          "n_test": 5,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 15,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        }
+      ],
+      "per_group_unordered": [
+        {
+          "group": 0,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 1,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.5
+        },
+        {
+          "group": 2,
+          "n_test": 10,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 3,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 5,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 6,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 7,
+          "n_test": 10,
+          "true_class": 0,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 10,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        },
+        {
+          "group": 11,
+          "n_test": 10,
+          "true_class": 1,
+          "frac_correct": 0.0
+        },
+        {
+          "group": 15,
+          "n_test": 5,
+          "true_class": 0,
+          "frac_correct": 1.0
+        }
+      ]
+    }
+  },
+  "X4_selfpair_2x2_complexB": {
+    "train_with__test_with": 0.45,
+    "train_with__test_without": 0.25,
+    "train_without__test_with": 0.24,
+    "train_without__test_without": 0.4
+  },
+  "X6_partition_enumeration": [
+    {
+      "partition": "(0, 1)|(2, 3)",
+      "is_designated": false,
+      "balanced_acc": 0.625,
+      "status": "ok"
+    },
+    {
+      "partition": "(0, 2)|(1, 3)",
+      "is_designated": true,
+      "balanced_acc": 0.625,
+      "status": "ok"
+    },
+    {
+      "partition": "(0, 3)|(1, 2)",
+      "is_designated": false,
+      "balanced_acc": 0.7125,
+      "status": "ok"
+    }
+  ]
+}
