@@ -99,22 +99,15 @@ def fig1_taskD(audit):
     ax.barh(y - h / 2 - 0.01, abl, height=h, color=ORANGE,
             label="self-pairs removed", zorder=3)
 
-    hdr = len(rows) + 0.10                 # column headers, above the bars
-    rule_lo, rule_hi = -0.48, len(rows) - 0.32
-    foot = -0.80                           # rule labels, below where rules end
-    # Rules span the bar band only, so they terminate above the label row and
-    # cannot cross it.
-    ax.vlines(0.5, rule_lo, rule_hi, color=MUTED, lw=1.0, ls=(0, (4, 3)),
-              zorder=2)
-    ax.vlines(ident, rule_lo, rule_hi, color=INK2, lw=1.2, ls=(0, (5, 2)),
-              zorder=2)
-    ax.text(0.5, foot, "chance", color=MUTED, ha="center", va="center",
-            fontsize=7)
-    ax.text(ident, foot,
-            "identity rule $(x{=}y)$ $=$ " + f"{ident:.3f}",
-            color=INK2, ha="center", va="center", fontsize=7)
+    # Reference levels are named in the legend, not by floating text, so the
+    # rules can run the full height without anything to collide with.
+    ax.axvline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2,
+               label="chance (0.500)")
+    ax.axvline(ident, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=2,
+               label=f"identity rule $(x{{=}}y)$, no measurement ({ident:.3f})")
 
-    # values live in their own columns, so nothing collides with the rules
+    hdr = len(rows) + 0.10                 # column headers, above the bars
+    # Values live in their own columns, so no number ever sits on a bar.
     ax.text(COL_R, hdr, "released", color=MUTED, ha="right", va="bottom", fontsize=6.5)
     ax.text(COL_A, hdr, "ablated", color=MUTED, ha="right", va="bottom", fontsize=6.5)
     for yy, v in zip(y, rel):
@@ -127,12 +120,13 @@ def fig1_taskD(audit):
     ax.set_yticks(y, labels, color=INK2, fontsize=8)
     ax.set_xticks(np.arange(0, 0.9, 0.2))
     ax.set_xlim(0, 1.05)
-    ax.set_ylim(-1.15, len(rows) + 0.55)
+    ax.set_ylim(-0.62, len(rows) + 0.55)
     ax.set_xlabel("balanced accuracy, Task D (cross-split same category)",
-                  labelpad=10)
+                  labelpad=6)
     style_axes(ax)
-    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.38, -0.26),
-              ncol=2, fontsize=7.5, labelcolor=INK2, handlelength=1.2)
+    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.42, -0.20),
+              ncol=2, fontsize=7, labelcolor=INK2, handlelength=1.6,
+              columnspacing=1.4)
 
     fig.tight_layout()
     out = os.path.join(FIG_DIR, "fig1_taskD_selfpair.pdf")
@@ -146,63 +140,73 @@ def fig2_leakage(audit, robust):
     """(a) Tasks B/C released vs pair-grouped;  (b) Task C fold-count sweep."""
     lk = audit["B3_leakage_bin25"]
     feats = [("complex_B", "Complex-B"),
-             ("digital_bilinear", "Digital\nbilinear"),
+             ("digital_bilinear", "Digital bilinear"),
              ("concat", "Concat")]
 
-    fig, (axB, axC, axS) = plt.subplots(
-        1, 3, figsize=(7.1, 2.6),
-        gridspec_kw={"width_ratios": [1.0, 1.0, 1.1], "wspace": 0.5})
+    # Horizontal bars with a dedicated value column, as in Fig. 1. In a vertical
+    # grouped layout a four-character label is wider than its own bar and spills
+    # over the neighbouring one; giving values their own column makes that
+    # collision structurally impossible rather than a matter of tuning offsets.
+    fig = plt.figure(figsize=(6.4, 3.5))
+    gs = fig.add_gridspec(2, 2, width_ratios=[1.75, 1.0],
+                          hspace=0.75, wspace=0.30)
+    axB, axC = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[1, 0])
+    axS = fig.add_subplot(gs[:, 1])
 
+    # One value column per row, written as "released -> grouped". Two separate
+    # columns need more width than this panel has: at 6 pt the word "released"
+    # alone spans over half the axis, so the headers collide.
+    COL = 1.33
     for ax, task, chance, title in (
-            (axB, "B", 0.5, "Task B  (binary)"),
-            (axC, "C", 1 / 16, "Task C  (16-way)")):
-        x = np.arange(len(feats))
+            (axB, "B", 0.5, "Task B  (binary; chance 0.500)"),
+            (axC, "C", 1 / 16, "Task C  (16-way; chance 0.063)")):
         rel = [lk[f"{k}:{task}"]["released_skf"] for k, _ in feats]
         grp = [lk[f"{k}:{task}"]["grouped_sgkf"] for k, _ in feats]
-        w = 0.34
-        b1 = ax.bar(x - w / 2 - 0.01, rel, width=w, color=BLUE, zorder=3)
-        b2 = ax.bar(x + w / 2 + 0.01, grp, width=w, color=ORANGE, zorder=3)
-        # The rule spans the data band and sits behind the opaque bars, so it
-        # is visible only in the gaps.
-        ax.hlines(chance, -0.5, len(feats) - 0.5, color=MUTED, lw=1.0,
-                  ls=(0, (4, 3)), zorder=2)
-        # Offset in points, not data units: the gap above each bar is then
-        # fixed at LABEL_PAD_PT regardless of bar height or axis scale, so a
-        # label can neither touch its bar nor land on the rule.
-        for c in (b1, b2):
-            ax.bar_label(c, fmt="%.2f", padding=LABEL_PAD_PT, fontsize=6.5,
-                         color=INK2)
-        ax.set_xticks(x, [n for _, n in feats], fontsize=6.3, color=INK2,
-                      linespacing=1.2)
-        ax.set_xlim(-0.55, len(feats) - 0.45)
-        ax.set_ylim(0, 1.18)
-        ax.set_title(title, fontsize=8, color=INK, pad=6)
-        style_axes(ax, xgrid=False)
-    axB.set_ylabel("balanced accuracy")
+        y = np.arange(len(feats))[::-1]
+        h = 0.33
+        ax.barh(y + h / 2 + 0.01, rel, height=h, color=BLUE, zorder=3)
+        ax.barh(y - h / 2 - 0.01, grp, height=h, color=ORANGE, zorder=3)
+        ax.axvline(chance, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
 
-    # (b) fold-count sweep for Task C
+        for yy, a, b in zip(y, rel, grp):
+            ax.text(COL, yy, f"{a:.2f} $\\rightarrow$ {b:.2f}", va="center",
+                    ha="right", fontsize=7, color=INK2)
+        ax.text(COL, len(feats) - 0.42, "released $\\rightarrow$ grouped",
+                color=MUTED, ha="right", va="bottom", fontsize=6)
+
+        ax.set_yticks(y, [n for _, n in feats], fontsize=7, color=INK2)
+        ax.set_xticks(np.arange(0, 1.01, 0.25))
+        ax.set_xlim(0, 1.37)
+        ax.set_ylim(-0.55, len(feats) - 0.20)
+        ax.set_title(title, fontsize=7.5, color=INK, pad=5, loc="left")
+        style_axes(ax)
+    axC.set_xlabel("balanced accuracy", fontsize=7.5)
+
     for bin_size, colour, marker in ((25, BLUE, "o"), (10, ORANGE, "s")):
         sweep = robust[f"Q1_taskC_sweep_bin{bin_size}"]
         ns = sorted(int(k) for k in sweep)
         vals = [sweep[str(n)]["balanced_acc"] for n in ns]
-        axS.plot(ns, vals, color=colour, lw=2, marker=marker, ms=5,
+        axS.plot(ns, vals, color=colour, lw=1.8, marker=marker, ms=5,
                  mec=SURFACE, mew=1.0, zorder=3, label=f"bin {bin_size}")
-    axS.axhline(1 / 16, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
+    axS.axhline(1 / 16, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2,
+                label="chance (0.063)")
     axS.set_xticks([2, 4, 5, 8], ["2", "4", "5", "8"], fontsize=7, color=INK2)
     axS.set_xlabel("number of pair-grouped folds", fontsize=7.5)
+    axS.set_ylabel("balanced accuracy, Task C", fontsize=7.5)
     axS.set_ylim(0, 0.30)
-    axS.set_title("Task C, fold-count sweep", fontsize=8, color=INK, pad=6)
-    axS.legend(frameon=False, fontsize=7, labelcolor=INK2,
-               handlelength=1.4, loc="upper right")
+    axS.set_title("Task C, fold-count sweep", fontsize=7.5, color=INK,
+                  pad=5, loc="left")
+    axS.legend(frameon=False, fontsize=6.5, labelcolor=INK2,
+               handlelength=1.6, loc="upper right")
     style_axes(axS, xgrid=False)
 
-    handles = [Patch(facecolor=BLUE, label="released scoring (repeats split)"),
+    handles = [Patch(facecolor=BLUE, label="released scoring (repeats split across folds)"),
                Patch(facecolor=ORANGE, label="pair-grouped scoring"),
                Line2D([0], [0], color=MUTED, lw=1.0, ls=(0, (4, 3)),
-                      label="chance level (0.500 / 0.063)")]
-    fig.legend(handles=handles, frameon=False, fontsize=7.5, labelcolor=INK2,
-               ncol=3, loc="lower center", bbox_to_anchor=(0.5, -0.16),
-               handlelength=1.6)
+                      label="chance level")]
+    fig.legend(handles=handles, frameon=False, fontsize=7, labelcolor=INK2,
+               ncol=3, loc="lower center", bbox_to_anchor=(0.5, -0.10),
+               handlelength=1.6, columnspacing=1.6)
 
     out = os.path.join(FIG_DIR, "fig2_leakage.pdf")
     fig.savefig(out, bbox_inches="tight")
@@ -224,18 +228,19 @@ def fig3_repeat_correlation():
     cors = np.array(cors)
 
     fig, ax = plt.subplots(figsize=(3.4, 2.2))
-    ax.hist(cors, bins=48, color=BLUE, zorder=3)
-    top = ax.get_ylim()[1]
-    ax.set_ylim(0, top)
-    # Rule stops below the label, so the two never cross.
-    ax.vlines(0.97, 0, top * 0.84, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=4)
-    ax.text(0.968, top * 0.87, "0.97", color=INK2, fontsize=7,
-            ha="right", va="bottom")
+    ax.hist(cors, bins=48, color=BLUE, zorder=3,
+            label="pairwise repeat correlations (all 64 ordered pairs)")
+    # The threshold is named in the legend rather than by a floating number,
+    # which on its own said nothing about what it marked.
+    ax.axvline(0.97, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=4,
+               label="0.97, the value stated in the deposit")
     ax.set_xlabel("pairwise correlation between physical repeats", fontsize=7.5)
     ax.set_ylabel("count", fontsize=7.5)
     ax.set_title(f"mean {cors.mean():.4f} · {100*(cors>0.97).mean():.1f}% above 0.97",
                  fontsize=7.5, color=INK, pad=5)
     style_axes(ax, xgrid=False)
+    ax.legend(frameon=False, fontsize=6.3, labelcolor=INK2, handlelength=1.4,
+              loc="upper center", bbox_to_anchor=(0.45, -0.28))
     fig.tight_layout()
     out = os.path.join(FIG_DIR, "fig3_repeat_correlation.pdf")
     fig.savefig(out, bbox_inches="tight")
@@ -252,29 +257,27 @@ def fig4_permutation_null(struct):
     fig, ax = plt.subplots(figsize=(5.4, 2.6))
     xs = np.sort(scores)
     ys = np.arange(1, len(xs) + 1) / len(xs)
-    # Single series: the axis label and caption name it, so no legend box.
-    ax.step(xs, ys, where="post", color=BLUE, lw=2, zorder=3)
+    ax.step(xs, ys, where="post", color=BLUE, lw=2, zorder=3,
+            label=f"all {s['n_partitions']} admissible category assignments")
     ax.plot(scores, np.full_like(scores, -0.045), "|", color=BLUE,
             ms=5, mew=0.9, alpha=0.55, zorder=3, clip_on=False)
 
-    ax.axvline(obs, color=ORANGE, lw=2, zorder=4)
-    ax.text(obs + 0.004, 0.60, f"designated semantic\nassignment  {obs:.4f}",
-            color=ORANGE, fontsize=7, ha="left", va="center", linespacing=1.3)
-    ax.axvline(s["null_mean"], color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
-    ax.text(s["null_mean"] + 0.003, 0.06, f"null mean {s['null_mean']:.4f}",
-            color=MUTED, fontsize=6.5, ha="left")
+    ax.axvline(obs, color=ORANGE, lw=2, zorder=4,
+               label=f"designated semantic assignment ({obs:.4f})")
+    ax.axvline(s["null_mean"], color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2,
+               label=f"null mean ({s['null_mean']:.4f})")
 
     ax.set_xlabel("pair-grouped balanced accuracy, Task B", fontsize=7.5)
-    ax.set_ylabel(f"cumulative fraction of the {s['n_partitions']} assignments",
-                  fontsize=7.5)
+    # The count is stated in the legend; repeating it here overruns the axis.
+    ax.set_ylabel("cumulative fraction", fontsize=7.5)
     ax.set_ylim(-0.09, 1.04)
     ax.set_title(f"exact one-sided $p$ = {s['p_exact_fraction']} = {s['p_exact']:.4f}",
                  fontsize=8, color=INK, pad=6)
     style_axes(ax, xgrid=False)
-    # Lower right: the ECDF is high there, and the observed-value rule sits on
-    # the far left, so nothing overlaps the legend.
-    ax.legend(frameon=False, fontsize=7, labelcolor=INK2, loc="lower right",
-              bbox_to_anchor=(1.0, 0.02), handlelength=1.4)
+    # Every series and rule is named below the axes, so no annotation sits
+    # inside the plotting area where a rule could pass through it.
+    ax.legend(frameon=False, fontsize=6.5, labelcolor=INK2, handlelength=1.6,
+              loc="upper center", bbox_to_anchor=(0.45, -0.24), ncol=1)
     fig.tight_layout()
     out = os.path.join(FIG_DIR, "fig4_permutation_null.pdf")
     fig.savefig(out, bbox_inches="tight")
