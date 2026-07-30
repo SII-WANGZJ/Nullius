@@ -17,7 +17,9 @@
 Minimum evidence standards for attributing scientific\\ findings to autonomous
 agents}
 
-\author{[Author]\\[2pt]\small [Affiliation]}
+\author{Zhengjie Wang\\[2pt]
+\small Shanghai Innovation Institute\\
+\small \texttt{wangzhengjie@sii.edu.cn}}
 \date{\today}
 
 \begin{document}
@@ -703,7 +705,12 @@ not available to the model or its operators beforehand.
 All analysis code, the audit modifications and the full result files are at
 \url{https://github.com/[user]/discovery-audit}. The audit consumes only the
 authors' public deposit (DOI 10.5281/zenodo.19890402); no data of our own were
-generated.
+generated, and the deposit is not redistributed. Every file read from the
+deposit is recorded with its SHA-256 in \code{results/input\_manifest.json};
+the roll-up digest over all 1543 consumed files is
+\code{b273f7f6c8d5bd8d7bb849e1d9908ea35a8ec171b9870b7cd2cb27b496351350}, so any
+subsequent change to the deposit is detectable. The environment is pinned in
+\code{environment.yml} and \code{requirements-lock.txt}.
 
 \section*{Correspondence with the authors}
 % TODO: fill in after the enquiry has been sent and the response window closed.
