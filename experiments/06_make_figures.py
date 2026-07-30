@@ -63,6 +63,13 @@ def style_axes(ax, xgrid=True):
     ax.tick_params(length=0)
 
 
+#: Two rules keep labels off marks and rules, without ever occluding data:
+#: value labels are offset in *points* (so the gap is fixed regardless of the
+#: data scale), and reference rules are drawn with vlines/hlines spanning only
+#: the data band, never axvline/axhline across the whole axes.
+LABEL_PAD_PT = 3
+
+
 # ---------------------------------------------------------------------------
 def fig1_taskD(audit):
     """Task D: as released vs self-pairs removed, against the identity rule."""
@@ -92,10 +99,15 @@ def fig1_taskD(audit):
     ax.barh(y - h / 2 - 0.01, abl, height=h, color=ORANGE,
             label="self-pairs removed", zorder=3)
 
-    ax.axvline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
-    ax.axvline(ident, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=2)
     hdr = len(rows) + 0.10                 # column headers, above the bars
-    foot = -0.52                           # rule labels, below the bars
+    rule_lo, rule_hi = -0.48, len(rows) - 0.32
+    foot = -0.80                           # rule labels, below where rules end
+    # Rules span the bar band only, so they terminate above the label row and
+    # cannot cross it.
+    ax.vlines(0.5, rule_lo, rule_hi, color=MUTED, lw=1.0, ls=(0, (4, 3)),
+              zorder=2)
+    ax.vlines(ident, rule_lo, rule_hi, color=INK2, lw=1.2, ls=(0, (5, 2)),
+              zorder=2)
     ax.text(0.5, foot, "chance", color=MUTED, ha="center", va="center",
             fontsize=7)
     ax.text(ident, foot,
@@ -115,11 +127,11 @@ def fig1_taskD(audit):
     ax.set_yticks(y, labels, color=INK2, fontsize=8)
     ax.set_xticks(np.arange(0, 0.9, 0.2))
     ax.set_xlim(0, 1.05)
-    ax.set_ylim(-0.85, len(rows) + 0.55)
+    ax.set_ylim(-1.15, len(rows) + 0.55)
     ax.set_xlabel("balanced accuracy, Task D (cross-split same category)",
-                  labelpad=8)
+                  labelpad=10)
     style_axes(ax)
-    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.38, -0.24),
+    ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.38, -0.26),
               ncol=2, fontsize=7.5, labelcolor=INK2, handlelength=1.2)
 
     fig.tight_layout()
@@ -148,17 +160,22 @@ def fig2_leakage(audit, robust):
         rel = [lk[f"{k}:{task}"]["released_skf"] for k, _ in feats]
         grp = [lk[f"{k}:{task}"]["grouped_sgkf"] for k, _ in feats]
         w = 0.34
-        ax.bar(x - w / 2 - 0.01, rel, width=w, color=BLUE, zorder=3)
-        ax.bar(x + w / 2 + 0.01, grp, width=w, color=ORANGE, zorder=3)
-        ax.axhline(chance, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
-        for xx, v in zip(x - w / 2 - 0.01, rel):
-            ax.text(xx, v + 0.03, f"{v:.2f}", ha="center", fontsize=6.5, color=INK2)
-        for xx, v in zip(x + w / 2 + 0.01, grp):
-            ax.text(xx, v + 0.03, f"{v:.2f}", ha="center", fontsize=6.5, color=INK2)
+        b1 = ax.bar(x - w / 2 - 0.01, rel, width=w, color=BLUE, zorder=3)
+        b2 = ax.bar(x + w / 2 + 0.01, grp, width=w, color=ORANGE, zorder=3)
+        # The rule spans the data band and sits behind the opaque bars, so it
+        # is visible only in the gaps.
+        ax.hlines(chance, -0.5, len(feats) - 0.5, color=MUTED, lw=1.0,
+                  ls=(0, (4, 3)), zorder=2)
+        # Offset in points, not data units: the gap above each bar is then
+        # fixed at LABEL_PAD_PT regardless of bar height or axis scale, so a
+        # label can neither touch its bar nor land on the rule.
+        for c in (b1, b2):
+            ax.bar_label(c, fmt="%.2f", padding=LABEL_PAD_PT, fontsize=6.5,
+                         color=INK2)
         ax.set_xticks(x, [n for _, n in feats], fontsize=6.3, color=INK2,
                       linespacing=1.2)
         ax.set_xlim(-0.55, len(feats) - 0.45)
-        ax.set_ylim(0, 1.28)
+        ax.set_ylim(0, 1.18)
         ax.set_title(title, fontsize=8, color=INK, pad=6)
         style_axes(ax, xgrid=False)
     axB.set_ylabel("balanced accuracy")
@@ -208,9 +225,12 @@ def fig3_repeat_correlation():
 
     fig, ax = plt.subplots(figsize=(3.4, 2.2))
     ax.hist(cors, bins=48, color=BLUE, zorder=3)
-    ax.axvline(0.97, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=4)
-    ax.text(0.968, ax.get_ylim()[1] * 0.94, "0.97 ", color=INK2,
-            fontsize=7, ha="right", va="top")
+    top = ax.get_ylim()[1]
+    ax.set_ylim(0, top)
+    # Rule stops below the label, so the two never cross.
+    ax.vlines(0.97, 0, top * 0.84, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=4)
+    ax.text(0.968, top * 0.87, "0.97", color=INK2, fontsize=7,
+            ha="right", va="bottom")
     ax.set_xlabel("pairwise correlation between physical repeats", fontsize=7.5)
     ax.set_ylabel("count", fontsize=7.5)
     ax.set_title(f"mean {cors.mean():.4f} · {100*(cors>0.97).mean():.1f}% above 0.97",
@@ -232,8 +252,8 @@ def fig4_permutation_null(struct):
     fig, ax = plt.subplots(figsize=(5.4, 2.6))
     xs = np.sort(scores)
     ys = np.arange(1, len(xs) + 1) / len(xs)
-    ax.step(xs, ys, where="post", color=BLUE, lw=2, zorder=3,
-            label=f"all {s['n_partitions']} admissible assignments")
+    # Single series: the axis label and caption name it, so no legend box.
+    ax.step(xs, ys, where="post", color=BLUE, lw=2, zorder=3)
     ax.plot(scores, np.full_like(scores, -0.045), "|", color=BLUE,
             ms=5, mew=0.9, alpha=0.55, zorder=3, clip_on=False)
 
@@ -245,13 +265,16 @@ def fig4_permutation_null(struct):
             color=MUTED, fontsize=6.5, ha="left")
 
     ax.set_xlabel("pair-grouped balanced accuracy, Task B", fontsize=7.5)
-    ax.set_ylabel("cumulative fraction", fontsize=7.5)
+    ax.set_ylabel(f"cumulative fraction of the {s['n_partitions']} assignments",
+                  fontsize=7.5)
     ax.set_ylim(-0.09, 1.04)
     ax.set_title(f"exact one-sided $p$ = {s['p_exact_fraction']} = {s['p_exact']:.4f}",
                  fontsize=8, color=INK, pad=6)
     style_axes(ax, xgrid=False)
-    ax.legend(frameon=False, fontsize=7, labelcolor=INK2, loc="upper left",
-              handlelength=1.4)
+    # Lower right: the ECDF is high there, and the observed-value rule sits on
+    # the far left, so nothing overlaps the legend.
+    ax.legend(frameon=False, fontsize=7, labelcolor=INK2, loc="lower right",
+              bbox_to_anchor=(1.0, 0.02), handlelength=1.4)
     fig.tight_layout()
     out = os.path.join(FIG_DIR, "fig4_permutation_null.pdf")
     fig.savefig(out, bbox_inches="tight")
