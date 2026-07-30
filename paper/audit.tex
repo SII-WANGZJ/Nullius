@@ -64,7 +64,10 @@ claim: we find no evidence in the inspected data that the
 measurements were fabricated or internally inconsistent, and the reported
 hardware automation may be substantial but is not evaluated by this audit.
 The failure is one of evidence--claim alignment within the specific experiment
-that carries the computational conclusion.
+that carries the computational conclusion. Neither benchmark is contradicted
+as a demonstration that repeated measurements of a fixed, already-observed
+pair library are decodable; what they do not support is the relation-specific,
+semantic, and unseen-pair reading placed on them.
 \end{abstract}
 
 \section{Introduction}
@@ -107,45 +110,25 @@ runs the released code with one line changed---which is the argument for
 requiring that the code be released, and for looking at it.
 
 We state at the outset what this exercise is not. We allege no misconduct, we
-find no evidence of fabrication, and we do not dispute that the automation
-demonstrated in the target work is a real achievement.
+find no evidence of fabrication in the data we inspected, and we take no
+position on the reported hardware automation, which we did not audit.
 Section~\ref{sec:caveats} makes the boundaries explicit.
 
-\section{The \textsc{Probe} checklist}
+\subsection{Audit criteria}
 \label{sec:probe}
 
-\paragraph{P --- Provenance disclosure.}
-The backbone model and version, its training cut-off relative to the
-publication dates of all target papers, the complete initial prompt, every
-candidate direction generated and discarded, the criterion by which a
-direction was selected and by whom, every human intervention, and the full
-agent trace. Without these, the causal attribution ``the agent discovered
-$X$'' is not merely unverified but unformulated.
+We audit against five requirements, referred to below as \textsc{Probe} and
+stated in full in Appendix~\ref{app:probe}: \emph{Provenance} disclosure
+sufficient to make a causal attribution formulable; \emph{Replication} across
+independent runs; \emph{Operator-matched} controls, in which the comparison is
+the same quantity under the same operator rather than a different quantity;
+\emph{Benchmark} integrity, meaning that the evaluation possesses the structure
+it purports to measure and that its partitions respect the unit of
+generalisation; and \emph{Evaluation} pre-registration, or full disclosure of
+the search when choices were not fixed in advance. They are proposed as a
+minimal starting set, not a sufficient one.
 
-\paragraph{R --- Replication.}
-At least three independent runs from the same starting prompt, with the
-distribution of outcomes reported. A single trajectory from a stochastic
-system cannot distinguish an architectural property from a sampling event.
-
-\paragraph{O --- Operator-matched control.}
-Where a physical measurement is claimed to produce information, the control
-must be the digital reconstruction of the \emph{same} quantity under the
-\emph{same} operator, not a different quantity. Randomising the operator, or
-substituting an algebraically distinct expression, tests a different
-hypothesis.
-
-\paragraph{B --- Benchmark integrity.}
-The evaluation must possess the structure it purports to measure; train/test
-partitions must respect the unit of generalisation; and every reported
-accuracy must be compared against the best measurement-free rule available on
-the same partition, and against an exact or permutation null over the
-admissible label assignments where one can be enumerated.
-
-\paragraph{E --- Evaluation pre-registration.}
-Readout parameters, feature budgets and splits must be fixed before the
-comparison of interest, or the search over them must be reported in full.
-
-\section{Summary of findings}
+\subsection{Summary of findings}
 \label{sec:summary}
 
 Table~\ref{tab:summary} states each claim we examined, what the public
@@ -188,7 +171,60 @@ substantial; this audit does not evaluate it \\
 \end{tabular}
 \end{table}
 
-\section{Case study: setup}
+\subsection{Scope and unaudited claims}
+\label{sec:scope}
+
+This audit is deliberately claim-specific. We examine the released Result-4
+pipeline because it provides the empirical basis for the manuscript's claims
+concerning optical bilinear computation, semantic pair representation, and the
+analogy to a core operation in Transformer attention. We reproduce and
+stress-test the public data, scripts, feature construction and evaluation
+protocol associated with that result.
+
+We do not present a complete audit of the two preceding studies. In
+particular, we have not independently evaluated the optical acquisition
+efficiency or the focusing-enhancement deficit in the transmission-matrix
+reproduction (Result 2), nor have we reconstructed the full
+theory-to-measurement argument, mixed-state synthesis or uncertainty
+propagation in the majorization-order study (Result 3). We therefore draw no
+conclusion about the correctness, novelty or autonomy of those results. Their
+inclusion in the target manuscript does not, however, resolve the
+benchmark-integrity failures identified for Result 4, nor does it provide
+evidence for the specific computational claims tested here.
+
+Our operator analysis is similarly bounded. We distinguish identities that
+follow from the ideal shared-operator model from properties of the released
+experimental estimator. The empirical deviations reported in
+Sec.~\ref{sec:ideal} do not identify their physical cause. They may arise from
+unequal propagation operators in the two input arms, residual self-reference
+terms, imperfect phase stepping, calibration error, drift, or another
+unmodelled component. Resolving these alternatives requires measurements and
+hardware information not present in the public deposit.
+
+Finally, statements about absent evidence refer only to the public record
+available to us as of 30 July 2026: arXiv:2604.27092v1 and the Zenodo deposit
+10.5281/zenodo.19890402. The deposit states that the formal Supplementary
+Information submitted to the journal, the Qiushi Engine core system and the
+hardware-control software are not included. We therefore distinguish ``not
+present in the public materials'' from ``not performed''. In particular, we
+cannot determine whether an operator-matched reconstruction, additional
+agent-provenance records or alternative evaluation protocols exist in
+non-public submission materials.
+
+\subsection{What we do not claim}
+\label{sec:caveats}
+
+We find no evidence in the inspected Result-4 data that the hardware
+measurements were fabricated or internally inconsistent. The raw frames,
+repeat structure and drift monitoring are substantial and mutually consistent.
+We make no assessment of the reported hardware automation---sustained agent
+control of a real optical platform over hundreds of steps---because the
+materials required to evaluate it are not public and we did not audit it; our
+findings neither support nor challenge it. Our claim is narrower and, we
+think, more serious: the specific evidence offered for the specific central
+computational conclusion does not support it.
+
+\section{Reproduction and evaluation design}
 \label{sec:setup}
 
 The target work couples an LLM multi-agent system to a free-space optical
@@ -240,7 +276,7 @@ feature ensemble: $3.00$ at $\mathrm{bin}=25$ and $9.62$ at
 $\mathrm{bin}=10$, against their stated $\sim$3 and $\sim$9. Nothing that
 follows is a pipeline discrepancy.
 
-\section{Benchmark integrity}
+\section{Benchmark findings}
 \label{sec:benchmark}
 
 \subsection{B1: the benchmark carries no semantic structure}
@@ -257,12 +293,23 @@ that is, eight independent unit-modulus random phase vectors. The words
 (\emph{cat}, \emph{dog}, \emph{hammer}, \dots) and the categories
 (\emph{animals}, \emph{tools}, \dots) are labels attached to random vectors;
 no embedding enters the pipeline. Consequently the proposition ``\emph{cat}
-and \emph{dog} belong to the same category'' is encoded nowhere in the inputs
-or in the physics. The data-generating process contains no designed semantic
-relation from which held-out-category generalisation could be learned; any
-above-chance Task-D result must therefore be attributed to a finite-sample
-accident or to an evaluation cue, rather than to encoded semantics recovered
-by the measurement.
+and \emph{dog} belong to the same category'' is encoded nowhere in the inputs.
+
+This much is common ground. The authors' own Report 4 lists the token--field
+mapping among its limitations and states that the mapping is arbitrary, in
+that ``cat'' and ``dog'' share no more optical structure than ``cat'' and
+``hammer''. We take that premise from them. Where we differ is in the
+inference drawn from it: the report concludes that the observed
+semantic-category separation therefore arises from the interaction physics
+rather than from a semantically informed encoding. That inference presupposes
+that a category separation is present to be explained. Sections~\ref{sec:B3}
+and~\ref{sec:B4} test precisely that presupposition.
+
+The immediate consequence of the shared premise is narrower but firm: the
+data-generating process contains no designed semantic relation from which
+held-out-category generalisation could be learned, so any above-chance Task-D
+result must be attributed to a finite-sample accident or to an evaluation cue,
+rather than to encoded semantics recovered by the measurement.
 
 \subsection{B2: Task D is accounted for by self-pairs}
 
@@ -302,6 +349,7 @@ unaffected by the ablation.}
 \end{figure}
 
 \subsection{B3: Tasks A--C are inflated by repeat leakage}
+\label{sec:B3}
 
 Leakage of this kind---correlated repeated measurements of the same unit
 distributed across folds---is a documented and widespread failure mode in
@@ -372,6 +420,7 @@ Digital bilinear & C (16-way)  & 0.4437 & 0.1709 & $-0.2729$ \\
 \end{table}
 
 \subsection{B4: the residual Task-B accuracy is not significant}
+\label{sec:B4}
 
 Pair-grouped scoring leaves Task B at $0.6522$, above the binary chance level.
 This residual admits an exact test, in the label-permutation family
@@ -562,51 +611,7 @@ structure, about pairwise relational computation, and about analogy to
 attention are all claims about a relation that transfers. That transfer is
 what the released evaluations do not test.
 
-\section{Model--measurement consistency: a diagnostic observation}
-\label{sec:ideal}
-
-This section is diagnostic rather than evaluative. It bears on neither the
-benchmark failures of Sec.~\ref{sec:benchmark} nor the central attribution
-question, and we report it because it constrains what the released estimator
-can be assumed to satisfy.
-
-Under the stated linear-optical model the unbinned channel kernel
-$K_p = T_p^{\dagger}T_p$ is \emph{algebraically} rank-one, Hermitian and
-positive semidefinite; spatial binning forms $K_k=\sum_{p\in\mathcal{B}_k}K_p$,
-a positive semidefinite sum whose algebraic rank is bounded by the number of
-independent propagation rows in the bin. These are consequences of the model,
-not empirical assumptions, and they imply $B_p(y,x)=B_p(x,y)^{\ast}$.
-
-What the release contains is an estimator carrying a reference arm, phase
-stepping, blank subtraction, drift and calibration error. It satisfies the
-ideal identities only approximately. Over the 28 off-diagonal token pairs the
-mean correlation between $\widehat B(y,x)$ and $\overline{\widehat B(x,y)}$ is
-$0.6042$, against $0.1537$ for the uncorrelated comparison $\widehat B(x,y)$;
-the conjugate symmetry is thus clearly present but far from exact. On
-self-pairs, where the model predicts a positive real value, the real part is
-non-negative in every channel, but the mean relative imaginary magnitude
-$|\mathrm{Im}\,\widehat B|/|\widehat B|$ is $0.3511$.
-
-A phase-gauge offset would reproduce this signature without implying that the
-cross term was not isolated, so we tested it: estimating a single global phase,
-and then a per-channel phase, from the self-pairs alone and applying it to all
-pairs. Neither accounts for the departure. The self-pair imaginary ratio falls
-only from $0.3511$ to $0.3102$ (global) and $0.3057$ (per-channel), and the
-swap-conjugate correlation does not improve ($0.5666$ and $0.5606$). The
-per-channel phases are moreover nearly identical (circular spread $0.0019$), so
-there is no channel-dependent phase structure to remove.
-
-We draw no conclusion about the cause. Two candidate explanations remain open
-and are not separable from the released data: a residual in the blank or
-reference subtraction, and the two input arms not sharing a transmission
-operator, $T_x \neq T_y$. We flag that the second would also weaken one line
-of criticism available against the attention analogy, since a kernel
-$T_x^{\dagger}T_y$ is rank-one but neither Hermitian nor positive
-semidefinite, and is in that respect \emph{less} constrained than the
-shared-operator case. Resolving this requires acquisition-level information
-that the deposit does not contain.
-
-\section{The missing operator-matched control}
+\section{Computational interpretation}
 \label{sec:operator}
 
 Equation~\eqref{eq:B} is the cross term of two-beam interference, isolated by
@@ -634,7 +639,7 @@ released data. It can, however, be performed on the same apparatus: the
 self-referenced transmission-matrix measurement in the earlier studies of the
 same work recovers exactly the complex fields it requires.
 
-\section{What is, and is not, implemented relative to attention}
+\subsection{What is, and is not, implemented relative to attention}
 \label{sec:attention}
 
 The manuscript describes the measured quantity as structurally analogous to a
@@ -671,88 +676,7 @@ The defensible reading is therefore that the experiment demonstrates a
 restricted physical pair-feature primitive, not an implementation of
 Transformer attention and not attention hardware.
 
-\section{Evaluation search space}
-\label{sec:search}
-
-The evaluation supporting the computational claim involves several free
-choices, and the released material shows that more than one value of most of
-them was examined. Table~\ref{tab:search} records the search space that is
-publicly visible, alongside what the public record does and does not establish
-about when each choice was fixed. We stress the distinction: for none of these
-choices do the released materials document the selection \emph{timing}, and we
-therefore do not assert that any of them was made after inspecting the
-outcome. What the record does establish is that the reported configuration was
-selected from a searched space without an independent confirmation set. This
-is adaptive evaluation, and the standard remedy---pre-registration of the
-readout parameters and splits, or a held-out physical realisation on which the
-selected configuration is evaluated once---was not applied.
-
-\begin{table}[t]
-\centering\small
-\caption{Publicly visible evaluation search space for the Result-4 benchmark.}
-\label{tab:search}
-\begin{tabular}{p{3.0cm}p{4.0cm}p{3.4cm}p{2.6cm}}
-\toprule
-Choice & Publicly observed search & Selection timing & Independent confirmation \\
-\midrule
-Detector bin & 5, 10, 25 & Not publicly documented & None identified \\
-Output budget & multiple $n_{\text{out}}$ values & Not publicly documented & None identified \\
-Task-D protocol & multiple descriptions and implementations & Protocol evolution observed & None identified \\
-Feature family & multiple optical and digital families & Exploratory analysis evident & None identified \\
-Token vocabulary & one fixed random codebook & Not publicly documented & No independent vocabulary \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\section{Provenance}
-\label{sec:provenance}
-
-The central claim is causal: that an agent, rather than its training
-distribution or its operators, originated the mechanism. Searching the full
-deposit we find no backbone model name or version, no system or initial
-prompts, no agent trace, no record of human intervention, and no
-direction-selection log; the deposit states explicitly that the engine and
-hardware-control software are not included. What is released---result-level
-data and offline analysis scripts---establishes that the numbers can be
-recomputed. It cannot establish where the idea came from.
-
-We note a further tension internal to the released material. The staged
-reports characterise the contribution in measured terms: phase-stepping
-interferometry is ``a mature technique'', and ``the methodological novelty is
-not the demodulation itself but its application to extract a computationally
-meaningful bilinear observable''. The abstract of the manuscript describes the
-same object as a ``previously unreported physical mechanism''. We record this
-as an internal inconsistency in how the contribution is characterised. It is
-not a completed novelty audit: establishing that the physical claim is
-overstated would require a systematic prior-art search over phase-shifting
-interferometry, coherent and heterodyne detection, optical and joint-transform
-correlators, coherent optical multiplication, complex-field inner-product
-measurement, photonic bilinear computing and scattering-medium random
-features, which we have not carried out. Our position is that physical
-novelty is \emph{not established} by the released materials, not that it is
-absent.
-
-\subsection{Architectural attribution}
-
-A separate attribution problem sits beneath the provenance one, and survives
-even if the trajectory were accepted as fully autonomous. The manuscript
-credits specific architectural components---Meta-Trace, the dual-layer
-separation, role--phase decoupling, accumulated research experience---with
-sustaining the long-horizon trajectory. A single successful run cannot
-identify which component, if any, produced the outcome. The released material
-contains no single-agent baseline, no run with Meta-Trace replaced by ordinary
-rolling summarisation, no fixed-workflow comparison, no ablation of the
-Critical Reviewer role, no run without inherited prior-study experience, no
-variation of random seed, and no variation of backbone model. Nor is there a
-human-expert time or cost baseline against which the reported speed advantage
-could be assessed. The reported totals---145.9 million tokens, 3{,}242 model
-calls, 1{,}242 tool invocations---are resource counts. They record what was
-spent, not which architectural choice was responsible for what was obtained.
-
-\section{Discussion}
-\label{sec:discussion}
-
-\subsection{Limits of the computational interpretation}
+\subsection{Scale, effective dimensionality, and unmeasured outlooks}
 
 \paragraph{Scale and effective dimensionality.}
 The released computational demonstration contains eight fixed tokens and
@@ -799,6 +723,84 @@ energy-efficient Transformer-like hardware should therefore be read as
 prospective motivation rather than experimental findings of the present
 study.
 
+\section{Discovery attribution and protocol status}
+\label{sec:provenance}
+
+The central claim is causal: that an agent, rather than its training
+distribution or its operators, originated the mechanism. Searching the full
+deposit we find no backbone model name or version, no system or initial
+prompts, no agent trace, no record of human intervention, and no
+direction-selection log; the deposit states explicitly that the engine and
+hardware-control software are not included. What is released---result-level
+data and offline analysis scripts---establishes that the numbers can be
+recomputed. It cannot establish where the idea came from.
+
+We note a further tension internal to the released material. The staged
+reports characterise the contribution in measured terms: phase-stepping
+interferometry is ``a mature technique'', and ``the methodological novelty is
+not the demodulation itself but its application to extract a computationally
+meaningful bilinear observable''. The abstract of the manuscript describes the
+same object as a ``previously unreported physical mechanism''. We record this
+as an internal inconsistency in how the contribution is characterised. It is
+not a completed novelty audit: establishing that the physical claim is
+overstated would require a systematic prior-art search over phase-shifting
+interferometry, coherent and heterodyne detection, optical and joint-transform
+correlators, coherent optical multiplication, complex-field inner-product
+measurement, photonic bilinear computing and scattering-medium random
+features, which we have not carried out. Our position is that physical
+novelty is \emph{not established} by the released materials, not that it is
+absent.
+
+\subsection{Architectural attribution}
+
+A separate attribution problem sits beneath the provenance one, and survives
+even if the trajectory were accepted as fully autonomous. The manuscript
+credits specific architectural components---Meta-Trace, the dual-layer
+separation, role--phase decoupling, accumulated research experience---with
+sustaining the long-horizon trajectory. A single successful run cannot
+identify which component, if any, produced the outcome. The released material
+contains no single-agent baseline, no run with Meta-Trace replaced by ordinary
+rolling summarisation, no fixed-workflow comparison, no ablation of the
+Critical Reviewer role, no run without inherited prior-study experience, no
+variation of random seed, and no variation of backbone model. Nor is there a
+human-expert time or cost baseline against which the reported speed advantage
+could be assessed. The reported totals---145.9 million tokens, 3{,}242 model
+calls, 1{,}242 tool invocations---are resource counts. They record what was
+spent, not which architectural choice was responsible for what was obtained.
+
+\subsection{Evaluation search space}
+\label{sec:search}
+
+The evaluation supporting the computational claim involves several free
+choices, and the released material shows that more than one value of most of
+them was examined. Table~\ref{tab:search} records the search space that is
+publicly visible, alongside what the public record does and does not establish
+about when each choice was fixed. We stress the distinction: for none of these
+choices do the released materials document the selection \emph{timing}, and we
+therefore do not assert that any of them was made after inspecting the
+outcome. What the record does establish is that the reported configuration was
+selected from a searched space without an independent confirmation set. This
+is adaptive evaluation, and the standard remedy---pre-registration of the
+readout parameters and splits, or a held-out physical realisation on which the
+selected configuration is evaluated once---was not applied.
+
+\begin{table}[t]
+\centering\small
+\caption{Publicly visible evaluation search space for the Result-4 benchmark.}
+\label{tab:search}
+\begin{tabular}{p{3.0cm}p{4.0cm}p{3.4cm}p{2.6cm}}
+\toprule
+Choice & Publicly observed search & Selection timing & Independent confirmation \\
+\midrule
+Detector bin & 5, 10, 25 & Not publicly documented & None identified \\
+Output budget & multiple $n_{\text{out}}$ values & Not publicly documented & None identified \\
+Task-D protocol & multiple descriptions and implementations & Protocol evolution observed & None identified \\
+Feature family & multiple optical and digital families & Exploratory analysis evident & None identified \\
+Token vocabulary & one fixed random codebook & Not publicly documented & No independent vocabulary \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{Protocol evolution and confirmatory status.}
 The released reports document an evolving analysis rather than one fixed
 confirmatory protocol. Report 4 and Report 5 describe different
@@ -822,60 +824,7 @@ would require a frozen protocol evaluated on new tokens, a new codebook, an
 independent acquisition, or another physical realisation without further
 selection of readout configuration.
 
-\section{Scope and unaudited claims}
-\label{sec:scope}
-
-This audit is deliberately claim-specific. We examine the released Result-4
-pipeline because it provides the empirical basis for the manuscript's claims
-concerning optical bilinear computation, semantic pair representation, and the
-analogy to a core operation in Transformer attention. We reproduce and
-stress-test the public data, scripts, feature construction and evaluation
-protocol associated with that result.
-
-We do not present a complete audit of the two preceding studies. In
-particular, we have not independently evaluated the optical acquisition
-efficiency or the focusing-enhancement deficit in the transmission-matrix
-reproduction (Result 2), nor have we reconstructed the full
-theory-to-measurement argument, mixed-state synthesis or uncertainty
-propagation in the majorization-order study (Result 3). We therefore draw no
-conclusion about the correctness, novelty or autonomy of those results. Their
-inclusion in the target manuscript does not, however, resolve the
-benchmark-integrity failures identified for Result 4, nor does it provide
-evidence for the specific computational claims tested here.
-
-Our operator analysis is similarly bounded. We distinguish identities that
-follow from the ideal shared-operator model from properties of the released
-experimental estimator. The empirical deviations reported in
-Sec.~\ref{sec:ideal} do not identify their physical cause. They may arise from
-unequal propagation operators in the two input arms, residual self-reference
-terms, imperfect phase stepping, calibration error, drift, or another
-unmodelled component. Resolving these alternatives requires measurements and
-hardware information not present in the public deposit.
-
-Finally, statements about absent evidence refer only to the public record
-available to us as of 30 July 2026: arXiv:2604.27092v1 and the Zenodo deposit
-10.5281/zenodo.19890402. The deposit states that the formal Supplementary
-Information submitted to the journal, the Qiushi Engine core system and the
-hardware-control software are not included. We therefore distinguish ``not
-present in the public materials'' from ``not performed''. In particular, we
-cannot determine whether an operator-matched reconstruction, additional
-agent-provenance records or alternative evaluation protocols exist in
-non-public submission materials.
-
-\section{What we do not claim}
-\label{sec:caveats}
-
-We find no evidence in the inspected Result-4 data that the hardware
-measurements were fabricated or internally inconsistent. The raw frames,
-repeat structure and drift monitoring are substantial and mutually consistent.
-We make no assessment of the reported hardware automation---sustained agent
-control of a real optical platform over hundreds of steps---because the
-materials required to evaluate it are not public and we did not audit it; our
-findings neither support nor challenge it. Our claim is narrower and, we
-think, more serious: the specific evidence offered for the specific central
-computational conclusion does not support it.
-
-\section{Evidence needed to adjudicate the claims}
+\section{Limitations and evidence needed}
 \label{sec:settle}
 
 The deficiencies identified above are resolvable. They require different
@@ -977,6 +926,87 @@ stronger conclusions: automated execution of a known protocol, recombination
 of available scientific knowledge, generation and testing of a new
 engineering interpretation, and experimental identification of a finding
 not available to the model or its operators beforehand.
+
+
+\appendix
+
+\section{Model--measurement consistency}
+\label{sec:ideal}\label{app:ideal}
+
+This section is diagnostic rather than evaluative. It bears on neither the
+benchmark failures of Sec.~\ref{sec:benchmark} nor the central attribution
+question, and we report it because it constrains what the released estimator
+can be assumed to satisfy.
+
+Under the stated linear-optical model the unbinned channel kernel
+$K_p = T_p^{\dagger}T_p$ is \emph{algebraically} rank-one, Hermitian and
+positive semidefinite; spatial binning forms $K_k=\sum_{p\in\mathcal{B}_k}K_p$,
+a positive semidefinite sum whose algebraic rank is bounded by the number of
+independent propagation rows in the bin. These are consequences of the model,
+not empirical assumptions, and they imply $B_p(y,x)=B_p(x,y)^{\ast}$.
+
+What the release contains is an estimator carrying a reference arm, phase
+stepping, blank subtraction, drift and calibration error. It satisfies the
+ideal identities only approximately. Over the 28 off-diagonal token pairs the
+mean correlation between $\widehat B(y,x)$ and $\overline{\widehat B(x,y)}$ is
+$0.6042$, against $0.1537$ for the uncorrelated comparison $\widehat B(x,y)$;
+the conjugate symmetry is thus clearly present but far from exact. On
+self-pairs, where the model predicts a positive real value, the real part is
+non-negative in every channel, but the mean relative imaginary magnitude
+$|\mathrm{Im}\,\widehat B|/|\widehat B|$ is $0.3511$.
+
+A phase-gauge offset would reproduce this signature without implying that the
+cross term was not isolated, so we tested it: estimating a single global phase,
+and then a per-channel phase, from the self-pairs alone and applying it to all
+pairs. Neither accounts for the departure. The self-pair imaginary ratio falls
+only from $0.3511$ to $0.3102$ (global) and $0.3057$ (per-channel), and the
+swap-conjugate correlation does not improve ($0.5666$ and $0.5606$). The
+per-channel phases are moreover nearly identical (circular spread $0.0019$), so
+there is no channel-dependent phase structure to remove.
+
+We draw no conclusion about the cause. Two candidate explanations remain open
+and are not separable from the released data: a residual in the blank or
+reference subtraction, and the two input arms not sharing a transmission
+operator, $T_x \neq T_y$. We flag that the second would also weaken one line
+of criticism available against the attention analogy, since a kernel
+$T_x^{\dagger}T_y$ is rank-one but neither Hermitian nor positive
+semidefinite, and is in that respect \emph{less} constrained than the
+shared-operator case. Resolving this requires acquisition-level information
+that the deposit does not contain.
+
+\section{The \textsc{Probe} checklist in full}
+\label{app:probe}
+
+\paragraph{P --- Provenance disclosure.}
+The backbone model and version, its training cut-off relative to the
+publication dates of all target papers, the complete initial prompt, every
+candidate direction generated and discarded, the criterion by which a
+direction was selected and by whom, every human intervention, and the full
+agent trace. Without these, the causal attribution ``the agent discovered
+$X$'' is not merely unverified but unformulated.
+
+\paragraph{R --- Replication.}
+At least three independent runs from the same starting prompt, with the
+distribution of outcomes reported. A single trajectory from a stochastic
+system cannot distinguish an architectural property from a sampling event.
+
+\paragraph{O --- Operator-matched control.}
+Where a physical measurement is claimed to produce information, the control
+must be the digital reconstruction of the \emph{same} quantity under the
+\emph{same} operator, not a different quantity. Randomising the operator, or
+substituting an algebraically distinct expression, tests a different
+hypothesis.
+
+\paragraph{B --- Benchmark integrity.}
+The evaluation must possess the structure it purports to measure; train/test
+partitions must respect the unit of generalisation; and every reported
+accuracy must be compared against the best measurement-free rule available on
+the same partition, and against an exact or permutation null over the
+admissible label assignments where one can be enumerated.
+
+\paragraph{E --- Evaluation pre-registration.}
+Readout parameters, feature budgets and splits must be fixed before the
+comparison of interest, or the search over them must be reported in full.
 
 \section*{Data and code availability}
 All analysis code, the audit modifications and the full result files are at
