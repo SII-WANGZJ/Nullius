@@ -2,8 +2,7 @@
   "source": "arXiv:2604.27092 / zenodo.19890402",
   "pipeline_mirrored_from": "05_result4_refine_paper/scripts/analyze_advantage_boundary.py",
   "bins": [
-    25,
-    10
+    25
   ],
   "R1_raw_inputs": {
     "rows": {
@@ -169,128 +168,6 @@
     "complex_B:C": {
       "released_skf": 1.0,
       "grouped_sgkf": 0.0474,
-      "status": "ok"
-    }
-  },
-  "R2_optical_bin10": {
-    "rows": {
-      "concat": {
-        "name": "concat",
-        "dim": 5000,
-        "A": 1.0,
-        "B": 0.5,
-        "C": 1.0,
-        "D": 0.5
-      },
-      "digital_bilinear": {
-        "name": "digital_bilinear",
-        "dim": 2500,
-        "A": 0.5625,
-        "B": 1.0,
-        "C": 0.4437,
-        "D": 0.5833
-      },
-      "complex_B": {
-        "name": "complex_B",
-        "dim": 5000,
-        "A": 1.0,
-        "B": 1.0,
-        "C": 1.0,
-        "D": 0.7396
-      }
-    },
-    "complex_B_effective_rank": 9.623
-  },
-  "B2_selfpair_bin10": {
-    "trivial_rule_with_self_pairs": 0.75,
-    "trivial_rule_without_self_pairs": 0.5,
-    "rows": {
-      "optical:concat": {
-        "D_released": 0.5,
-        "D_no_self_pairs": 0.5,
-        "delta": 0.0
-      },
-      "optical:digital_bilinear": {
-        "D_released": 0.5833,
-        "D_no_self_pairs": 0.5,
-        "delta": -0.0833
-      },
-      "optical:complex_B": {
-        "D_released": 0.7396,
-        "D_no_self_pairs": 0.4948,
-        "delta": -0.2448
-      },
-      "raw:concat_raw": {
-        "D_released": 0.5,
-        "D_no_self_pairs": 0.5,
-        "delta": 0.0
-      },
-      "raw:diff_raw": {
-        "D_released": 0.5,
-        "D_no_self_pairs": 0.5,
-        "delta": 0.0
-      },
-      "raw:abs_diff_raw": {
-        "D_released": 0.7188,
-        "D_no_self_pairs": 0.7083,
-        "delta": -0.0104
-      },
-      "raw:prod_raw": {
-        "D_released": 0.5104,
-        "D_no_self_pairs": 0.4792,
-        "delta": -0.0312
-      },
-      "raw:conj_prod_raw": {
-        "D_released": 0.6979,
-        "D_no_self_pairs": 0.7083,
-        "delta": 0.0104
-      }
-    }
-  },
-  "B3_leakage_bin10": {
-    "concat:A": {
-      "released_skf": 1.0,
-      "grouped_sgkf": null,
-      "status": "degenerate: one class per group"
-    },
-    "concat:B": {
-      "released_skf": 0.5,
-      "grouped_sgkf": 0.43,
-      "status": "ok"
-    },
-    "concat:C": {
-      "released_skf": 1.0,
-      "grouped_sgkf": 0.4617,
-      "status": "ok"
-    },
-    "digital_bilinear:A": {
-      "released_skf": 0.5625,
-      "grouped_sgkf": null,
-      "status": "degenerate: one class per group"
-    },
-    "digital_bilinear:B": {
-      "released_skf": 1.0,
-      "grouped_sgkf": 0.95,
-      "status": "ok"
-    },
-    "digital_bilinear:C": {
-      "released_skf": 0.4437,
-      "grouped_sgkf": 0.1722,
-      "status": "ok"
-    },
-    "complex_B:A": {
-      "released_skf": 1.0,
-      "grouped_sgkf": null,
-      "status": "degenerate: one class per group"
-    },
-    "complex_B:B": {
-      "released_skf": 1.0,
-      "grouped_sgkf": 0.595,
-      "status": "ok"
-    },
-    "complex_B:C": {
-      "released_skf": 1.0,
-      "grouped_sgkf": 0.0463,
       "status": "ok"
     }
   }

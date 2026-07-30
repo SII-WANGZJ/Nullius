@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/SII-WANGZJ/nullius"
+Repository = "https://github.com/SII-WANGZJ/Nullius"
 "Target preprint" = "https://arxiv.org/abs/2604.27092"
 "Audited deposit" = "https://doi.org/10.5281/zenodo.19890402"
 

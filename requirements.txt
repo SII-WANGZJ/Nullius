@@ -1,0 +1,7 @@
+# Direct dependencies. Minimum versions only -- the audit is not sensitive to
+# patch releases of any of these. For the exact versions the reported numbers
+# were computed with, see requirements-lock.txt.
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.4
+matplotlib>=3.8
