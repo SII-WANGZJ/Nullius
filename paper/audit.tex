@@ -639,6 +639,39 @@ released data. It can, however, be performed on the same apparatus: the
 self-referenced transmission-matrix measurement in the earlier studies of the
 same work recovers exactly the complex fields it requires.
 
+\subsection{Relation to established optical technique}
+\label{sec:priorart}
+
+Two questions are worth separating, because the manuscript's abstract and its
+own staged reports answer them differently: whether the demodulation is new,
+and whether the use to which it is put is new.
+
+On the first, the technique is established. Recovering an interference term
+from a small set of intensity frames taken at stepped reference phases is the
+basis of phase-shifting interferometry~\cite{bruning}, and recovering a full
+complex field from intensity-only measurements by the same route is
+standard~\cite{yamaguchi}. This is consistent with the authors' own
+characterisation of phase-stepping interferometry as a mature technique.
+The potentially distinctive element is therefore not the demodulation identity
+itself, but the particular combination of two encoded inputs, a fixed
+scattering transformation, channel-resolved recovery, and the interpretation
+of the result as a computational feature. Our search was not exhaustive and
+does not establish whether that combination is unprecedented.
+
+On the second, each ingredient has substantial precedent in optical computing.
+Recovering complex per-channel quantities through a random scattering operator
+by phase stepping is how transmission matrices are
+measured~\cite{popoff}. Obtaining a product of two encoded optical fields by
+square-law detection is an established route to optical
+multiplication~\cite{hamerly}. Using a fixed scattering medium as a random
+feature map is the basis of optical reservoir computing~\cite{rafayelyan}.
+Establishing physical novelty therefore requires identifying which property of
+the combination was absent from prior optical correlators, scattering-based
+processors and coherent multiplication architectures---a determination the
+released materials do not make, and one that a systematic full-text prior-art
+review would be needed to settle. We record the position as \emph{novelty not
+established}, which is distinct from novelty absent.
+
 \subsection{What is, and is not, implemented relative to attention}
 \label{sec:attention}
 
@@ -674,7 +707,14 @@ linear classifier applied digitally to the measured features.
 
 The defensible reading is therefore that the experiment demonstrates a
 restricted physical pair-feature primitive, not an implementation of
-Transformer attention and not attention hardware.
+Transformer attention and not attention hardware. Existing photonic-attention
+work supplies the relevant category distinction: implementing a bilinear
+primitive is not the same as implementing an attention layer, which ordinarily
+requires programmable projections, formation of a score structure,
+normalisation or an explicit substitute for it, and value-side processing. We
+do not enter those systems as comparanda here, since a like-for-like
+comparison would require throughput and energy figures that the target work
+does not report.
 
 \subsection{Scale, effective dimensionality, and unmeasured outlooks}
 
@@ -742,14 +782,10 @@ not the demodulation itself but its application to extract a computationally
 meaningful bilinear observable''. The abstract of the manuscript describes the
 same object as a ``previously unreported physical mechanism''. We record this
 as an internal inconsistency in how the contribution is characterised. It is
-not a completed novelty audit: establishing that the physical claim is
-overstated would require a systematic prior-art search over phase-shifting
-interferometry, coherent and heterodyne detection, optical and joint-transform
-correlators, coherent optical multiplication, complex-field inner-product
-measurement, photonic bilinear computing and scattering-medium random
-features, which we have not carried out. Our position is that physical
-novelty is \emph{not established} by the released materials, not that it is
-absent.
+not a completed novelty audit; Sec.~\ref{sec:priorart} sets out how far the
+established literature reaches and what a determination would still require.
+Our position is that physical novelty is \emph{not established} by the
+released materials, not that it is absent.
 
 \subsection{Architectural attribution}
 
@@ -1045,6 +1081,19 @@ subsequent change to the deposit is detectable. The environment is pinned in
   % supports: self-pair cue and mirror reuse as shortcuts; the distinction
   % between intended and exploited structure.
 
+\bibitem{bruning} J.~H.~Bruning \emph{et al.},
+  \emph{Digital wavefront measuring interferometer for testing optical
+  surfaces and lenses}, Appl.\ Opt.\ \textbf{13}, 2693--2703 (1974).
+  % supports: stepped reference phase + per-detector intensity -> interference
+  % term, as an established measurement principle.
+\bibitem{yamaguchi} I.~Yamaguchi and T.~Zhang,
+  \emph{Phase-shifting digital holography}, Opt.\ Lett.\ \textbf{22},
+  1268--1270 (1997).
+  % supports: recovery of a complex field from intensity-only frames.
+\bibitem{rafayelyan} M.~Rafayelyan \emph{et al.},
+  \emph{Large-scale optical reservoir computing for spatiotemporal chaotic
+  systems prediction}, Phys.\ Rev.\ X \textbf{10}, 041037 (2020).
+  % supports: a fixed scattering medium as a random feature map.
 \bibitem{popoff} S.~M.~Popoff \emph{et al.},
   \emph{Measuring the transmission matrix in optics}, Phys.\ Rev.\ Lett.\
   \textbf{104}, 100601 (2010).
