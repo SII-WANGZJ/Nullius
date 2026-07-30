@@ -45,8 +45,8 @@ from sklearn.linear_model import RidgeClassifier
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.metrics import balanced_accuracy_score
 
-import common as C
-
+import _path  # noqa: F401  (puts src/ on sys.path)
+import nullius as N
 # Values printed in the released reports, for the replication check.
 # Report 5, advantage-boundary raw-input baselines (no optical propagation).
 PUBLISHED_RAW = {
@@ -103,12 +103,12 @@ def stage_R_raw_inputs(report: dict) -> None:
     print("STAGE R1  Replication -- raw-input baselines (no optical propagation)")
     print("=" * 74)
 
-    feats, pid, sc, cp, pinfo = C.build_raw_input_features()
+    feats, pid, sc, cp, pinfo = N.build_raw_input_features()
     rows, max_dev = {}, 0.0
     print(f"  {'feature':16s} {'dim':>5s}  " + "  ".join(f"{t:>6s}" for t in TASKS)
           + "     (published in parentheses)")
     for name, X in feats.items():
-        r = C.run_benchmark(X, pid, sc, cp, pinfo, name)
+        r = N.run_benchmark(X, pid, sc, cp, pinfo, name)
         rows[name] = r
         pub = PUBLISHED_RAW.get(name, {})
         cells = []
@@ -133,21 +133,21 @@ def stage_R_optical(bin_size: int, report: dict) -> dict:
     print("=" * 74)
 
     t0 = time.time()
-    single, blank, pair = C.load_all_data_binned(bin_size)
-    B_per_rep = C.compute_B_per_repeat(blank, pair)
-    feats, pid, sc, cp, pinfo = C.build_features(single, B_per_rep)
+    single, blank, pair = N.load_all_data_binned(bin_size)
+    B_per_rep = N.compute_B_per_repeat(blank, pair)
+    feats, pid, sc, cp, pinfo = N.build_features(single, B_per_rep)
     print(f"  loaded and demodulated in {time.time() - t0:.1f}s"
-          f"   ({len(pid)} samples = {len(pid)//C.N_REPS} pairs x {C.N_REPS} repeats)")
+          f"   ({len(pid)} samples = {len(pid)//N.N_REPS} pairs x {N.N_REPS} repeats)")
 
     rows = {}
     print(f"\n  {'feature':18s} {'dim':>6s}  " + "  ".join(f"{t:>7s}" for t in TASKS))
     for name, X in feats.items():
-        r = C.run_benchmark(X, pid, sc, cp, pinfo, name)
+        r = N.run_benchmark(X, pid, sc, cp, pinfo, name)
         rows[name] = r
         print(f"  {name:18s} {r['dim']:6d}  "
               + "  ".join(f"{r[t]:7.4f}" for t in TASKS))
 
-    pr = C.participation_ratio_effective_rank(feats["complex_B"])
+    pr = N.participation_ratio_effective_rank(feats["complex_B"])
     print(f"\n  participation-ratio effective rank of Complex-B: {pr:.2f}")
     report[f"R2_optical_bin{bin_size}"] = {
         "rows": rows, "complex_B_effective_rank": round(pr, 3)}
@@ -160,14 +160,14 @@ def stage_B2_selfpair(bundle_optical, bin_size: int, report: dict) -> None:
     print(f"STAGE B2  Self-pair ablation on Task D, bin = {bin_size}")
     print("=" * 74)
 
-    raw_feats, r_pid, r_sc, r_cp, r_pinfo = C.build_raw_input_features()
+    raw_feats, r_pid, r_sc, r_cp, r_pinfo = N.build_raw_input_features()
     families = {f"optical:{k}": (v, bundle_optical["sc"], bundle_optical["pinfo"])
                 for k, v in bundle_optical["feats"].items()}
     families.update({f"raw:{k}": (v, r_sc, r_pinfo) for k, v in raw_feats.items()})
 
-    triv_with = C.trivial_self_pair_detector_taskD(
+    triv_with = N.identity_rule_taskD(
         bundle_optical["pinfo"], bundle_optical["sc"], exclude_self_pairs=False)
-    triv_without = C.trivial_self_pair_detector_taskD(
+    triv_without = N.identity_rule_taskD(
         bundle_optical["pinfo"], bundle_optical["sc"], exclude_self_pairs=True)
 
     print(f"  featureless rule  'same_category := (x == y)'")
@@ -177,8 +177,8 @@ def stage_B2_selfpair(bundle_optical, bin_size: int, report: dict) -> None:
 
     rows = {}
     for name, (X, sc, pinfo) in families.items():
-        d_with = C.cross_split_eval(X, sc, pinfo, exclude_self_pairs=False)
-        d_without = C.cross_split_eval(X, sc, pinfo, exclude_self_pairs=True)
+        d_with = N.cross_split_eval(X, sc, pinfo, exclude_self_pairs=False)
+        d_without = N.cross_split_eval(X, sc, pinfo, exclude_self_pairs=True)
         rows[name] = {"D_released": round(d_with, 4),
                       "D_no_self_pairs": round(d_without, 4),
                       "delta": round(d_without - d_with, 4)}
@@ -208,7 +208,7 @@ def stage_B3_leakage(bundle_optical, bin_size: int, report: dict) -> None:
     rows = {}
     for name, X in bundle_optical["feats"].items():
         for task, y in (("A", pid), ("B", sc), ("C", cp)):
-            released = C.skf_balanced_accuracy(X, y)
+            released = N.skf_balanced_accuracy(X, y)
             grouped, status = grouped_balanced_accuracy(X, y, groups)
             rows[f"{name}:{task}"] = {
                 "released_skf": round(released, 4),
@@ -230,12 +230,12 @@ def main() -> int:
     ap.add_argument("--no-cache", action="store_true")
     args = ap.parse_args()
 
-    if not os.path.isdir(C.DATA_DIR):
-        print(f"ERROR: frame data not found at\n  {C.DATA_DIR}", file=sys.stderr)
+    if not os.path.isdir(N.SEMANTIC_DATA_DIR):
+        print(f"ERROR: frame data not found at\n  {N.SEMANTIC_DATA_DIR}", file=sys.stderr)
         return 2
     if args.no_cache:
-        for f in os.listdir(C.CACHE_DIR):
-            os.remove(os.path.join(C.CACHE_DIR, f))
+        for f in os.listdir(N.CACHE_DIR):
+            os.remove(os.path.join(N.CACHE_DIR, f))
 
     report: dict = {
         "source": "arXiv:2604.27092 / zenodo.19890402",
@@ -250,7 +250,7 @@ def main() -> int:
         stage_B2_selfpair(bundle, b, report)
         stage_B3_leakage(bundle, b, report)
 
-    out = os.path.join(C.RESULTS_DIR, "audit_results.json")
+    out = os.path.join(N.RESULTS_DIR, "audit_results.json")
     with open(out, "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2)
     print(f"\nwrote {out}")

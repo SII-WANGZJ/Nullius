@@ -1,14 +1,25 @@
 # The authors' deposit is NOT redistributed here.
-# Fetch it from DOI 10.5281/zenodo.19890402 and unpack it beside this repo;
-# audit/results/input_manifest.json records a SHA-256 for every file consumed.
+# Fetch it from DOI 10.5281/zenodo.19890402 and unpack it beside this repo,
+# or set NULLIUS_DEPOSIT to its path. results/input_manifest.json records a
+# SHA-256 for every file consumed.
 SM_Source_Materials_CORE_5REPORTS/
 *.tar.gz
 2604.27092v1.pdf
 
-# Audit working files
-audit/cache/
+# Local text/PDF extracts of the deposit and the target preprint.
+# Derivative of the authors' materials; kept out of this repository.
+SM_Reproducibility_Guide.*
+result4_paper.txt
+result4_refine.txt
+paper/audit_current.txt
+
+# Regenerable
+.cache/
 __pycache__/
 *.pyc
+*.egg-info/
+build/
+dist/
 
 # LaTeX build products
 paper/*.aux

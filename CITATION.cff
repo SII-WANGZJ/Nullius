@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+title: "nullius: a reproducible audit of a claim of autonomous scientific discovery"
+message: "If you use this audit, please cite both this repository and the manuscript."
+type: software
+authors:
+  - given-names: Zhengjie
+    family-names: Wang
+    email: wangzhengjie@sii.edu.cn
+    affiliation: Shanghai Innovation Institute
+repository-code: "https://github.com/REPLACE-ME/nullius"
+license: MIT
+version: 0.2.0
+abstract: >-
+  Re-runs the analysis released with arXiv:2604.27092 unmodified, reproducing
+  the released benchmark accuracies to within 5e-4, then changes one documented
+  assumption at a time. Reports that both experiments carrying the paper's
+  computational conclusion are scored under sample-level splits placing
+  repeated measurements of the same physical pair in training and test, and
+  that under pair-respecting evaluation, an exact permutation null, a self-pair
+  ablation and a mirror-pair grouping, the released evaluations do not
+  distinguish a relation-specific signal from pair identity together with
+  structural cues in the label design.
+references:
+  - type: article
+    title: "End-to-end autonomous scientific discovery on a real optical platform"
+    authors:
+      - family-names: Yang
+        given-names: Shuxing
+    year: 2026
+    identifiers:
+      - type: other
+        value: "arXiv:2604.27092"
+  - type: data
+    title: "Source materials for End-to-end autonomous scientific discovery"
+    authors:
+      - family-names: Yang
+        given-names: Shuxing
+    year: 2026
+    doi: "10.5281/zenodo.19890402"

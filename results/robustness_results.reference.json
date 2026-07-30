@@ -1,0 +1,149 @@
+{
+  "Q4_repeat_correlation_bin25": {
+    "mean": 0.9828,
+    "min": 0.6449,
+    "frac_above_0.97": 0.9703
+  },
+  "Q1_taskC_sweep_bin25": {
+    "2": {
+      "balanced_acc": 0.0969,
+      "frac_test_classes_seen_in_train": 1.0
+    },
+    "4": {
+      "balanced_acc": 0.0875,
+      "frac_test_classes_seen_in_train": 1.0
+    },
+    "5": {
+      "balanced_acc": 0.0474,
+      "frac_test_classes_seen_in_train": 1.0
+    },
+    "8": {
+      "balanced_acc": 0.0434,
+      "frac_test_classes_seen_in_train": 1.0
+    }
+  },
+  "Q2_taskD_bin25_incl": [
+    {
+      "held_category": 0,
+      "balanced_acc": 0.7292,
+      "n_distinct_positive_pairs": 4,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 1,
+      "balanced_acc": 0.7292,
+      "n_distinct_positive_pairs": 4,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 2,
+      "balanced_acc": 0.7292,
+      "n_distinct_positive_pairs": 4,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 3,
+      "balanced_acc": 0.7292,
+      "n_distinct_positive_pairs": 4,
+      "n_distinct_negative_pairs": 24
+    }
+  ],
+  "Q2_taskD_bin25_excl": [
+    {
+      "held_category": 0,
+      "balanced_acc": 0.5,
+      "n_distinct_positive_pairs": 2,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 1,
+      "balanced_acc": 0.4792,
+      "n_distinct_positive_pairs": 2,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 2,
+      "balanced_acc": 0.4792,
+      "n_distinct_positive_pairs": 2,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 3,
+      "balanced_acc": 0.5333,
+      "n_distinct_positive_pairs": 2,
+      "n_distinct_negative_pairs": 24
+    }
+  ],
+  "Q3_eff_rank_bin25": 3.002,
+  "Q1_taskC_sweep_bin10": {
+    "2": {
+      "balanced_acc": 0.1094,
+      "frac_test_classes_seen_in_train": 1.0
+    },
+    "4": {
+      "balanced_acc": 0.0813,
+      "frac_test_classes_seen_in_train": 1.0
+    },
+    "5": {
+      "balanced_acc": 0.0463,
+      "frac_test_classes_seen_in_train": 1.0
+    },
+    "8": {
+      "balanced_acc": 0.0434,
+      "frac_test_classes_seen_in_train": 1.0
+    }
+  },
+  "Q2_taskD_bin10_incl": [
+    {
+      "held_category": 0,
+      "balanced_acc": 0.75,
+      "n_distinct_positive_pairs": 4,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 1,
+      "balanced_acc": 0.75,
+      "n_distinct_positive_pairs": 4,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 2,
+      "balanced_acc": 0.7083,
+      "n_distinct_positive_pairs": 4,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 3,
+      "balanced_acc": 0.75,
+      "n_distinct_positive_pairs": 4,
+      "n_distinct_negative_pairs": 24
+    }
+  ],
+  "Q2_taskD_bin10_excl": [
+    {
+      "held_category": 0,
+      "balanced_acc": 0.5,
+      "n_distinct_positive_pairs": 2,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 1,
+      "balanced_acc": 0.5,
+      "n_distinct_positive_pairs": 2,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 2,
+      "balanced_acc": 0.4792,
+      "n_distinct_positive_pairs": 2,
+      "n_distinct_negative_pairs": 24
+    },
+    {
+      "held_category": 3,
+      "balanced_acc": 0.5,
+      "n_distinct_positive_pairs": 2,
+      "n_distinct_negative_pairs": 24
+    }
+  ],
+  "Q3_eff_rank_bin10": 9.623
+}

@@ -34,8 +34,8 @@ from sklearn.linear_model import RidgeClassifier
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.metrics import balanced_accuracy_score
 
-import common as C
-
+import _path  # noqa: F401  (puts src/ on sys.path)
+import nullius as N
 warnings.filterwarnings("ignore", category=UserWarning)
 
 TASK_D_CATS = [0, 1, 2, 3]
@@ -66,8 +66,8 @@ def taskD_per_fold(X, sc, pinfo, exclude_self_pairs: bool):
         for i, (x, y) in enumerate(pinfo):
             if exclude_self_pairs and x == y:
                 continue
-            cx = C.SEMANTIC_TOKENS[x]["category"]
-            cy = C.SEMANTIC_TOKENS[y]["category"]
+            cx = N.SEMANTIC_TOKENS[x]["category"]
+            cy = N.SEMANTIC_TOKENS[y]["category"]
             (te if (cx == held or cy == held) else tr).append(i)
         tr, te = np.array(tr), np.array(te)
         if len(tr) < 2 or len(te) < 2 or len(np.unique(sc[tr])) < 2:
@@ -109,9 +109,9 @@ def main() -> int:
         print(f"BIN = {bin_size}")
         print("=" * 74)
 
-        single, blank, pair = C.load_all_data_binned(bin_size)
-        B_per_rep = C.compute_B_per_repeat(blank, pair)
-        feats, pid, sc, cp, pinfo = C.build_features(single, B_per_rep)
+        single, blank, pair = N.load_all_data_binned(bin_size)
+        B_per_rep = N.compute_B_per_repeat(blank, pair)
+        feats, pid, sc, cp, pinfo = N.build_features(single, B_per_rep)
         Xb = feats["complex_B"]
 
         if bin_size == 25:
@@ -142,11 +142,11 @@ def main() -> int:
                           f"{r['n_distinct_negative_pairs']} negative")
             report[f"Q2_taskD_bin{bin_size}_{'excl' if excl else 'incl'}"] = rows
 
-        pr = C.participation_ratio_effective_rank(Xb)
+        pr = N.participation_ratio_effective_rank(Xb)
         print(f"\n      Complex-B participation-ratio effective rank = {pr:.2f}")
         report[f"Q3_eff_rank_bin{bin_size}"] = round(pr, 3)
 
-    out = os.path.join(C.RESULTS_DIR, "robustness_results.json")
+    out = os.path.join(N.RESULTS_DIR, "robustness_results.json")
     with open(out, "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2)
     print(f"\nwrote {out}")

@@ -38,8 +38,8 @@ from sklearn.linear_model import RidgeClassifier
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.metrics import balanced_accuracy_score
 
-import common as C
-
+import _path  # noqa: F401  (puts src/ on sys.path)
+import nullius as N
 warnings.filterwarnings("ignore", category=UserWarning)
 BIN = 25
 
@@ -50,8 +50,8 @@ BIN = 25
 def _sym_diagnostics(Bm):
     """Swap-conjugate vs plain-swap correlation, and self-pair imaginary ratio."""
     conj_c, plain_c = [], []
-    for x in range(C.N_TOKENS):
-        for y in range(x + 1, C.N_TOKENS):
+    for x in range(N.N_TOKENS):
+        for y in range(x + 1, N.N_TOKENS):
             a, b = Bm[(x, y)], Bm[(y, x)]
             av = np.concatenate([a.real, a.imag])
             cj = np.concatenate([a.real, -a.imag])
@@ -59,7 +59,7 @@ def _sym_diagnostics(Bm):
             conj_c.append(np.corrcoef(bv, cj)[0, 1])
             plain_c.append(np.corrcoef(bv, av)[0, 1])
     im_ratio, neg_frac = [], []
-    for x in range(C.N_TOKENS):
+    for x in range(N.N_TOKENS):
         d = Bm[(x, x)]
         im_ratio.append(np.abs(d.imag).mean() / np.abs(d).mean())
         neg_frac.append(float((d.real < 0).mean()))
@@ -83,14 +83,14 @@ def s1_ideal_vs_empirical(B_per_rep):
     out = {"raw": _sym_diagnostics(Bm)}
 
     # global gauge: one theta for the whole detector
-    acc = sum(Bm[(x, x)].sum() for x in range(C.N_TOKENS))
+    acc = sum(Bm[(x, x)].sum() for x in range(N.N_TOKENS))
     theta_g = np.angle(acc)
     Bg = {k: v * np.exp(-1j * theta_g) for k, v in Bm.items()}
     out["global_phase_corrected"] = _sym_diagnostics(Bg)
     out["global_theta_rad"] = round(float(theta_g), 4)
 
     # channel-wise gauge: one theta per detector channel
-    stack = np.stack([Bm[(x, x)] for x in range(C.N_TOKENS)], axis=0).sum(axis=0)
+    stack = np.stack([Bm[(x, x)] for x in range(N.N_TOKENS)], axis=0).sum(axis=0)
     theta_k = np.angle(stack)
     Bk = {k: v * np.exp(-1j * theta_k) for k, v in Bm.items()}
     out["channelwise_phase_corrected"] = _sym_diagnostics(Bk)
@@ -126,16 +126,16 @@ def grouped_taskB(X, sc, groups, n_splits=5):
 
 
 def s2_exact_permutation(X, pinfo, pid):
-    true_cat = {i: C.SEMANTIC_TOKENS[i]["category"] for i in range(C.N_TOKENS)}
+    true_cat = {i: N.SEMANTIC_TOKENS[i]["category"] for i in range(N.N_TOKENS)}
     scores, obs_idx = [], None
-    for j, pairing in enumerate(all_pairings(list(range(C.N_TOKENS)))):
+    for j, pairing in enumerate(all_pairings(list(range(N.N_TOKENS)))):
         cat = {}
         for ci, (a, b) in enumerate(pairing):
             cat[a] = cat[b] = ci
         sc = np.array([int(cat[x] == cat[y]) for (x, y) in pinfo])
         scores.append(grouped_taskB(X, sc, pid))
         if all((cat[a] == cat[b]) == (true_cat[a] == true_cat[b])
-               for a in range(C.N_TOKENS) for b in range(C.N_TOKENS)):
+               for a in range(N.N_TOKENS) for b in range(N.N_TOKENS)):
             obs_idx = j
     scores = np.array(scores)
     obs = float(scores[obs_idx])
@@ -160,7 +160,7 @@ def s2_exact_permutation(X, pinfo, pid):
 # S3
 # ---------------------------------------------------------------------------
 def s3_selfpair_2x2(X, sc, pinfo):
-    cats = sorted(set(C.SEMANTIC_TOKENS[i]["category"] for i in range(C.N_TOKENS)))
+    cats = sorted(set(N.SEMANTIC_TOKENS[i]["category"] for i in range(N.N_TOKENS)))
     out = {}
     for tr_self in (True, False):
         for te_self in (True, False):
@@ -169,8 +169,8 @@ def s3_selfpair_2x2(X, sc, pinfo):
                 tr, te = [], []
                 for i, (x, y) in enumerate(pinfo):
                     selfp = (x == y)
-                    cx = C.SEMANTIC_TOKENS[x]["category"]
-                    cy = C.SEMANTIC_TOKENS[y]["category"]
+                    cx = N.SEMANTIC_TOKENS[x]["category"]
+                    cy = N.SEMANTIC_TOKENS[y]["category"]
                     if cx == held or cy == held:
                         if selfp and not te_self:
                             continue
@@ -205,9 +205,9 @@ def s3_selfpair_2x2(X, sc, pinfo):
 
 # ---------------------------------------------------------------------------
 def main() -> int:
-    single, blank, pair = C.load_all_data_binned(BIN)
-    B_per_rep = C.compute_B_per_repeat(blank, pair)
-    feats, pid, sc, cp, pinfo = C.build_features(single, B_per_rep)
+    single, blank, pair = N.load_all_data_binned(BIN)
+    B_per_rep = N.compute_B_per_repeat(blank, pair)
+    feats, pid, sc, cp, pinfo = N.build_features(single, B_per_rep)
     X = feats["complex_B"]
     report = {"bin": BIN, "scoring": "RidgeClassifier(alpha=1.0), balanced accuracy"}
 
@@ -250,7 +250,7 @@ def main() -> int:
               f" {f0.get('n_distinct_test_pos_pairs','?')} distinct pos pairs)")
     report["S3"] = r3
 
-    out = os.path.join(C.RESULTS_DIR, "structure_tests.json")
+    out = os.path.join(N.RESULTS_DIR, "structure_tests.json")
     with open(out, "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2)
     print(f"\nwrote {out}")
