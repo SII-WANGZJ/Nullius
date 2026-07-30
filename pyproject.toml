@@ -30,12 +30,9 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/REPLACE-ME/nullius"
+Repository = "https://github.com/SII-WANGZJ/nullius"
 "Target preprint" = "https://arxiv.org/abs/2604.27092"
 "Audited deposit" = "https://doi.org/10.5281/zenodo.19890402"
 
-[tool.setuptools]
-package-dir = { "" = "src" }
-
 [tool.setuptools.packages.find]
-where = ["src"]
+include = ["nullius*"]
