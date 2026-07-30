@@ -35,20 +35,40 @@ SURFACE = "#fcfcfb"
 
 FIG_DIR = N.FIG_DIR
 
+#: Annotation ink. Distinct from GRID/AXIS, which stay light because they are
+#: rules rather than text: light grey is legible as a hairline and marginal as
+#: type at 8 pt.
+LABEL = "#5d5c58"
+
 plt.rcParams.update({
     "font.family": "sans-serif",
-    "font.sans-serif": ["DejaVu Sans"],
-    "font.size": 8,
+    # Arial/Helvetica read as a deliberate choice; DejaVu Sans reads as the
+    # Matplotlib default. Liberation Sans is the metric-compatible fallback.
+    "font.sans-serif": ["Arial", "Helvetica", "Liberation Sans", "DejaVu Sans"],
+    "font.size": 9,
+    "axes.titlesize": 9,
+    "axes.labelsize": 8.5,
+    "xtick.labelsize": 8,
+    "ytick.labelsize": 8,
+    "legend.fontsize": 8,
+    # Without this, mathtext falls back to DejaVu and the figures embed two
+    # unrelated typefaces. Check with pdffonts after any change here.
+    "mathtext.fontset": "custom",
+    "mathtext.rm": "Arial",
+    "mathtext.it": "Arial:italic",
+    "mathtext.bf": "Arial:bold",
+    "mathtext.default": "regular",
     "axes.edgecolor": AXIS,
     "axes.labelcolor": INK2,
-    "xtick.color": MUTED,
-    "ytick.color": MUTED,
+    "xtick.color": LABEL,
+    "ytick.color": LABEL,
     "figure.facecolor": SURFACE,
     "axes.facecolor": SURFACE,
     "savefig.facecolor": SURFACE,
     "axes.spines.top": False,
     "axes.spines.right": False,
     "pdf.fonttype": 42,
+    "ps.fonttype": 42,
 })
 
 
@@ -81,9 +101,10 @@ def fig1_taskD(audit):
         ("Complex-B  (optical, bin 25)",      b25["rows"]["optical:complex_B"]),
         ("Complex-B  (optical, bin 10)",      b10["rows"]["optical:complex_B"]),
         ("Digital bilinear  (intensity)",     b25["rows"]["optical:digital_bilinear"]),
-        (r"Raw $\mathrm{conj}\cdot\mathrm{prod}$  (no optics)",
-                                              b25["rows"]["raw:conj_prod_raw"]),
-        (r"Raw $|\mathrm{diff}|$  (no optics)", b25["rows"]["raw:abs_diff_raw"]),
+        # Plain Unicode rather than mathtext: \cdot and | fall back to STIX and
+        # would put a third typeface in the figure.
+        ("Raw conj·prod  (no optics)", b25["rows"]["raw:conj_prod_raw"]),
+        ("Raw |diff|  (no optics)", b25["rows"]["raw:abs_diff_raw"]),
     ]
     labels = [r[0] for r in rows]
     rel = [r[1]["D_released"] for r in rows]
@@ -104,18 +125,18 @@ def fig1_taskD(audit):
     ax.axvline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2,
                label="chance (0.500)")
     ax.axvline(ident, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=2,
-               label=f"identity rule $(x{{=}}y)$, no measurement ({ident:.3f})")
+               label=f"identity rule (x = y), no measurement ({ident:.3f})")
 
     hdr = len(rows) + 0.10                 # column headers, above the bars
     # Values live in their own columns, so no number ever sits on a bar.
-    ax.text(COL_R, hdr, "released", color=MUTED, ha="right", va="bottom", fontsize=6.5)
-    ax.text(COL_A, hdr, "ablated", color=MUTED, ha="right", va="bottom", fontsize=6.5)
+    ax.text(COL_R, hdr, "released", color=LABEL, ha="right", va="bottom", fontsize=8)
+    ax.text(COL_A, hdr, "ablated", color=LABEL, ha="right", va="bottom", fontsize=8)
     for yy, v in zip(y, rel):
         ax.text(COL_R, yy, f"{v:.3f}", va="center", ha="right",
-                fontsize=7.5, color=INK2)
+                fontsize=8.5, color=INK2)
     for yy, v in zip(y, abl):
         ax.text(COL_A, yy, f"{v:.3f}", va="center", ha="right",
-                fontsize=7.5, color=INK2)
+                fontsize=8.5, color=INK2)
 
     ax.set_yticks(y, labels, color=INK2, fontsize=8)
     ax.set_xticks(np.arange(0, 0.9, 0.2))
@@ -125,7 +146,7 @@ def fig1_taskD(audit):
                   labelpad=6)
     style_axes(ax)
     ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.42, -0.20),
-              ncol=2, fontsize=7, labelcolor=INK2, handlelength=1.6,
+              ncol=2, fontsize=8, labelcolor=INK2, handlelength=1.6,
               columnspacing=1.4)
 
     fig.tight_layout()
@@ -169,18 +190,18 @@ def fig2_leakage(audit, robust):
         ax.axvline(chance, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
 
         for yy, a, b in zip(y, rel, grp):
-            ax.text(COL, yy, f"{a:.2f} $\\rightarrow$ {b:.2f}", va="center",
-                    ha="right", fontsize=7, color=INK2)
-        ax.text(COL, len(feats) - 0.42, "released $\\rightarrow$ grouped",
-                color=MUTED, ha="right", va="bottom", fontsize=6)
+            ax.text(COL, yy, f"{a:.2f} → {b:.2f}", va="center",
+                    ha="right", fontsize=8, color=INK2)
+        ax.text(COL, len(feats) - 0.42, "released → grouped",
+                color=MUTED, ha="right", va="bottom", fontsize=8)
 
-        ax.set_yticks(y, [n for _, n in feats], fontsize=7, color=INK2)
+        ax.set_yticks(y, [n for _, n in feats], fontsize=8, color=INK2)
         ax.set_xticks(np.arange(0, 1.01, 0.25))
         ax.set_xlim(0, 1.37)
         ax.set_ylim(-0.55, len(feats) - 0.20)
-        ax.set_title(title, fontsize=7.5, color=INK, pad=5, loc="left")
+        ax.set_title(title, fontsize=8.5, color=INK, pad=5, loc="left")
         style_axes(ax)
-    axC.set_xlabel("balanced accuracy", fontsize=7.5)
+    axC.set_xlabel("balanced accuracy", fontsize=8.5)
 
     for bin_size, colour, marker in ((25, BLUE, "o"), (10, ORANGE, "s")):
         sweep = robust[f"Q1_taskC_sweep_bin{bin_size}"]
@@ -190,13 +211,13 @@ def fig2_leakage(audit, robust):
                  mec=SURFACE, mew=1.0, zorder=3, label=f"bin {bin_size}")
     axS.axhline(1 / 16, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2,
                 label="chance (0.063)")
-    axS.set_xticks([2, 4, 5, 8], ["2", "4", "5", "8"], fontsize=7, color=INK2)
-    axS.set_xlabel("number of pair-grouped folds", fontsize=7.5)
-    axS.set_ylabel("balanced accuracy, Task C", fontsize=7.5)
+    axS.set_xticks([2, 4, 5, 8], ["2", "4", "5", "8"], fontsize=8, color=INK2)
+    axS.set_xlabel("number of pair-grouped folds", fontsize=8.5)
+    axS.set_ylabel("balanced accuracy, Task C", fontsize=8.5)
     axS.set_ylim(0, 0.30)
-    axS.set_title("Task C, fold-count sweep", fontsize=7.5, color=INK,
+    axS.set_title("Task C, fold-count sweep", fontsize=8.5, color=INK,
                   pad=5, loc="left")
-    axS.legend(frameon=False, fontsize=6.5, labelcolor=INK2,
+    axS.legend(frameon=False, fontsize=8, labelcolor=INK2,
                handlelength=1.6, loc="upper right")
     style_axes(axS, xgrid=False)
 
@@ -204,7 +225,7 @@ def fig2_leakage(audit, robust):
                Patch(facecolor=ORANGE, label="pair-grouped scoring"),
                Line2D([0], [0], color=MUTED, lw=1.0, ls=(0, (4, 3)),
                       label="chance level")]
-    fig.legend(handles=handles, frameon=False, fontsize=7, labelcolor=INK2,
+    fig.legend(handles=handles, frameon=False, fontsize=8, labelcolor=INK2,
                ncol=3, loc="lower center", bbox_to_anchor=(0.5, -0.10),
                handlelength=1.6, columnspacing=1.6)
 
@@ -227,19 +248,19 @@ def fig3_repeat_correlation():
                 cors.append(np.corrcoef(v[i], v[j])[0, 1])
     cors = np.array(cors)
 
-    fig, ax = plt.subplots(figsize=(3.4, 2.2))
+    fig, ax = plt.subplots(figsize=(4.3, 2.5))
     ax.hist(cors, bins=48, color=BLUE, zorder=3,
             label="pairwise repeat correlations (all 64 ordered pairs)")
     # The threshold is named in the legend rather than by a floating number,
     # which on its own said nothing about what it marked.
     ax.axvline(0.97, color=INK2, lw=1.2, ls=(0, (5, 2)), zorder=4,
                label="0.97, the value stated in the deposit")
-    ax.set_xlabel("pairwise correlation between physical repeats", fontsize=7.5)
-    ax.set_ylabel("count", fontsize=7.5)
+    ax.set_xlabel("pairwise correlation between physical repeats", fontsize=8.5)
+    ax.set_ylabel("count", fontsize=8.5)
     ax.set_title(f"mean {cors.mean():.4f} · {100*(cors>0.97).mean():.1f}% above 0.97",
-                 fontsize=7.5, color=INK, pad=5)
+                 fontsize=8.5, color=INK, pad=5)
     style_axes(ax, xgrid=False)
-    ax.legend(frameon=False, fontsize=6.3, labelcolor=INK2, handlelength=1.4,
+    ax.legend(frameon=False, fontsize=8, labelcolor=INK2, handlelength=1.4,
               loc="upper center", bbox_to_anchor=(0.45, -0.28))
     fig.tight_layout()
     out = os.path.join(FIG_DIR, "fig3_repeat_correlation.pdf")
@@ -267,16 +288,16 @@ def fig4_permutation_null(struct):
     ax.axvline(s["null_mean"], color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2,
                label=f"null mean ({s['null_mean']:.4f})")
 
-    ax.set_xlabel("pair-grouped balanced accuracy, Task B", fontsize=7.5)
+    ax.set_xlabel("pair-grouped balanced accuracy, Task B", fontsize=8.5)
     # The count is stated in the legend; repeating it here overruns the axis.
-    ax.set_ylabel("cumulative fraction", fontsize=7.5)
+    ax.set_ylabel("cumulative fraction", fontsize=8.5)
     ax.set_ylim(-0.09, 1.04)
     ax.set_title(f"exact one-sided $p$ = {s['p_exact_fraction']} = {s['p_exact']:.4f}",
                  fontsize=8, color=INK, pad=6)
     style_axes(ax, xgrid=False)
     # Every series and rule is named below the axes, so no annotation sits
     # inside the plotting area where a rule could pass through it.
-    ax.legend(frameon=False, fontsize=6.5, labelcolor=INK2, handlelength=1.6,
+    ax.legend(frameon=False, fontsize=8, labelcolor=INK2, handlelength=1.6,
               loc="upper center", bbox_to_anchor=(0.45, -0.24), ncol=1)
     fig.tight_layout()
     out = os.path.join(FIG_DIR, "fig4_permutation_null.pdf")
@@ -310,7 +331,7 @@ def fig5_xor(x):
     for yy in ys:                                   # one recessive rule per row
         ax.plot([0, 1.02], [yy, yy], color=GRID, lw=0.8, zorder=1)
     ax.axvline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
-    ax.text(0.515, len(regimes) - 0.44, "chance", color=MUTED, fontsize=6.5,
+    ax.text(0.515, len(regimes) - 0.44, "chance", color=MUTED, fontsize=8,
             ha="left", va="bottom")
 
     # Dodge within each row: families share values exactly (both bilinear
@@ -324,12 +345,12 @@ def fig5_xor(x):
                 ls="none", color=col, zorder=4, label=label)
 
     ax.set_yticks(ys, [r[0].replace("\n", " ") for r in regimes],
-                  fontsize=7.5, color=INK2)
+                  fontsize=8.5, color=INK2)
     ax.set_xlim(-0.03, 1.05)
     ax.set_ylim(-0.7, len(regimes) - 0.15)
-    ax.set_xlabel("balanced accuracy, XOR relation (Task B)", fontsize=7.5)
+    ax.set_xlabel("balanced accuracy, XOR relation (Task B)", fontsize=8.5)
     style_axes(ax)
-    ax.legend(frameon=False, fontsize=7.5, labelcolor=INK2, ncol=3,
+    ax.legend(frameon=False, fontsize=8.5, labelcolor=INK2, ncol=3,
               loc="lower center", bbox_to_anchor=(0.5, -0.30), handlelength=1.0)
     fig.tight_layout()
     out = os.path.join(FIG_DIR, "fig5_xor_splits.pdf")
