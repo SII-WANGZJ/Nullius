@@ -39,7 +39,7 @@
 \author{Zhengjie Wang\\[2pt]
 \small Shanghai Innovation Institute\\
 \small \texttt{wangzhengjie@sii.edu.cn}}
-\date{Version 0.3 --- 30 July 2026}
+\date{}
 
 \begin{document}
 \maketitle
@@ -79,8 +79,7 @@ target work were not audited.
 
 \vspace{0.7em}
 \noindent\textbf{Keywords:} benchmark integrity; unit of generalisation; data
-leakage; permutation testing; shortcut learning; reproducibility; autonomous
-scientific discovery; optical computing.
+leakage; reproducibility; autonomous scientific discovery.
 \end{abstract}
 
 \section{Introduction}
@@ -1113,16 +1112,12 @@ Readout parameters, feature budgets and splits must be fixed before the
 comparison of interest, or the search over them must be reported in full.
 
 \section*{Data and code availability}
-All analysis code, the audit modifications and the full result files are at
-\url{https://github.com/SII-WANGZJ/Nullius}. The audit consumes only the
-authors' public deposit (DOI 10.5281/zenodo.19890402); no data of our own were
-generated, and the deposit is not redistributed. Every file read from the
-deposit is recorded with its SHA-256 in \code{results/input\_manifest.json},
-together with a roll-up digest over all 1543 consumed files beginning
-\code{b273f7f6c8d5bd8d7}, so any subsequent change to the deposit is
-detectable. The exact package versions the reported numbers were computed with
-are pinned in \code{requirements-lock.txt}; \code{requirements.txt} gives the
-four direct dependencies with minimum versions.
+All analysis code and result files are at
+\url{https://github.com/SII-WANGZJ/Nullius}, with package versions pinned. The
+audit generated no data of its own: it consumes only the authors' public
+deposit (DOI 10.5281/zenodo.19890402), which is not redistributed here. The
+repository records a checksum for every file read from that deposit, so any
+subsequent change to it is detectable.
 
 \begin{thebibliography}{99}\small
 \bibitem{qiushi} S.~Yang \emph{et al.},
