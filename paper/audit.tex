@@ -28,46 +28,34 @@ benchmark integrity, evaluation units, and evidential scope}
 \noindent
 Large language model (LLM) agents are increasingly reported to have
 \emph{discovered} scientific results rather than merely to have executed
-them. Such attributions are difficult to evaluate: the same artefact---a
-working protocol, a measured effect, a manuscript---is produced whether the
-agent reasoned its way to a new mechanism or recombined material already
-present in its training distribution, retrieved it, or was steered there by a
-human. We argue that the discipline currently lacks the minimum reporting and
-control standards that would make the distinction decidable, and we propose
-five---\textsc{Probe}: \emph{Provenance} disclosure, \emph{Replication} across
-independent runs, \emph{Operator-matched} controls, \emph{Benchmark}
-integrity, and \emph{Evaluation} pre-registration. We then apply the
-checklist to a recent, prominent claim: an LLM agent reported to have
-autonomously proposed and experimentally validated a previously unreported
-optical mechanism, an ``optical bilinear interaction'' analogous to the
-compatibility operation in Transformer attention (\target{}). Working
-entirely from the authors' own released data and analysis code, we reproduce
-the released benchmark accuracies to within $5\times10^{-4}$ and then show that the
-benchmark supporting the computational claim does not survive elementary
-integrity checks: the reported cross-split generalisation is accounted for by
-the presence of self-paired samples, and the remaining task accuracies are
-inflated by near-duplicate repeats shared between training and test folds.
-Under ordered-pair-grouped evaluation, pair-identity prediction is not a
-well-defined generalisation task, category-pair classification falls below
-chance, and same-category classification is not significant under the exact
-null distribution over all 105 admissible category assignments
-($p=102/105$). In the held-out-category task, above-chance performance occurs
-only when self-pairs are present in both the training and the test set;
-removing them from either side leaves no evidence of above-chance transfer.
-The second experiment supporting the same conclusion, a four-token XOR
-showcase, behaves the same way: its released accuracy of $1.000$ is obtained
-under a sample-level split and is not retained under any split that keeps a
-pair's repeated measurements together. What both benchmarks establish is
-decodability of the fixed, already-measured pairs, not generalisation of a
-relation to unseen pairs or unseen tokens. We emphasise what we do \emph{not}
-claim: we find no evidence in the inspected data that the
-measurements were fabricated or internally inconsistent, and the reported
-hardware automation may be substantial but is not evaluated by this audit.
-The failure is one of evidence--claim alignment within the specific experiment
-that carries the computational conclusion. Neither benchmark is contradicted
-as a demonstration that repeated measurements of a fixed, already-observed
-pair library are decodable; what they do not support is the relation-specific,
-semantic, and unseen-pair reading placed on them.
+them. Such attributions are hard to evaluate, because the artefact produced by
+discovery and the artefact produced by retrieval-plus-execution are the same
+artefact. We set out five minimum reporting and control requirements that
+would make the distinction assessable, and apply them to a recent, prominent
+claim: an LLM agent reported to have autonomously proposed and experimentally
+validated a previously unreported optical mechanism, an ``optical bilinear
+interaction'' analogous to the compatibility operation in Transformer
+attention (\target{}). Working entirely from the authors' released data and
+analysis code, we reproduce the released benchmark accuracies to within
+$5\times10^{-4}$. We then show that both experiments carrying the
+computational conclusion are scored under sample-level splits that place
+repeated measurements of the same physical pair in training and test.
+Re-evaluating with the pair as the unit of generalisation, and adding an exact
+permutation null over all 105 admissible category assignments
+($p = 102/105$), a self-pair ablation, and a mirror-pair grouping, we find
+that the released evaluations do not distinguish a relation-specific signal
+from pair identity together with structural cues in the label design. The
+benchmarks remain valid demonstrations that repeated measurements from a
+fixed, previously observed pair library are decodable; they do not, under the
+released evaluation protocol, establish relation-specific structure, semantic
+organisation, or transfer to unseen pairs. Separately, the public record
+contains no backbone-model disclosure, agent trace, intervention log or
+architectural ablation, so the attribution of the scientific interpretation to
+an autonomous agent is not assessable from it---independently of the benchmark
+findings. We find no evidence in the inspected data that measurements were
+fabricated or internally inconsistent; the reported hardware automation may be
+substantial and is not evaluated here, and the two preceding studies in the
+target work were not audited.
 \end{abstract}
 
 \section{Introduction}
@@ -144,29 +132,34 @@ paper.
 \label{tab:summary}
 \begin{tabular}{p{2.2cm}p{2.5cm}p{2.7cm}p{2.2cm}p{3.3cm}}
 \toprule
-Claim & Public material shows & Audit test & Outcome & Minimum conclusion that stands \\
+Claim & Public material shows & Audit test & Outcome (finding) & Minimum conclusion that stands \\
 \midrule
 XOR interaction & sample-level $1.000$ & pair, mirror and token grouping
-& not retained & repeated measurements of the 16 fixed pairs are decodable \\
+& not retained under any pair-respecting split & repeated measurements of the
+16 fixed pairs are decodable \\
 \addlinespace
 Semantic relation & high sample-level accuracy & grouped CV plus exact label
-permutation & designated partition not exceptional ($102/105$) & pair identity
-is decodable \\
+permutation & designated partition not exceptional ($102/105$, exact) & pair
+identity is decodable \\
 \addlinespace
 Task D transfer & Complex-B above chance & identity rule and $2\times2$
-ablation & learned self-pair shortcut & a decodable difference exists under
-the fixed protocol \\
+ablation & above-chance value present only with self-pairs on both sides &
+a decodable difference exists under the fixed protocol \\
 \addlinespace
 Attention analogy & a bilinear observable & operator comparison
 & weak form only & a fixed physical pair-feature primitive \\
 \addlinespace
-Physical novelty & a measurable cross term & internal consistency of the
-released characterisation & not established & the cross term is measurable on
-the platform \\
+Physical novelty & a measurable cross term & scoped bibliographic comparison
+(Sec.~\ref{sec:priorart}) & demodulation ingredients have established
+precedent; priority of the specific combination unresolved by this audit
+& the cross term is measurable on the platform \\
 \addlinespace
 Autonomous discovery & trajectory narrative and resource counts &
-provenance and ablation audit & not attributable & the automation may be
-substantial; this audit does not evaluate it \\
+provenance and ablation audit & not assessable from the public record &
+the automation may be substantial; this audit does not evaluate it \\
+\addlinespace
+Results 2 and 3 & transmission-matrix and majorization studies & ---
+& \textbf{not audited} & no conclusion drawn either way \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -348,7 +341,7 @@ unaffected by the ablation.}
 \label{fig:D}
 \end{figure}
 
-\subsection{B3: Tasks A--C are inflated by repeat leakage}
+\subsection{B3: Tasks A--C depend on repeat-level splitting}
 \label{sec:B3}
 
 Leakage of this kind---correlated repeated measurements of the same unit
@@ -381,7 +374,7 @@ $0.043$--$0.109$ at both readouts (Fig.~\ref{fig:leak}c).
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{fig2_leakage.pdf}
-\caption{\textbf{Tasks B and C are inflated by repeat leakage.}
+\caption{\textbf{Tasks B and C depend on repeat-level splitting.}
 (\textbf{a},\textbf{b}) Balanced accuracy at $\mathrm{bin}=25$ under the
 released scoring, which splits the five physical repeats of a pair across
 folds, and under pair-grouped scoring, which does not. (\textbf{c}) The
@@ -642,6 +635,12 @@ same work recovers exactly the complex fields it requires.
 \subsection{Relation to established optical technique}
 \label{sec:priorart}
 
+This section is a scoped bibliographic comparison based on the principal
+methods and claims associated with these works; it is not an exhaustive,
+apparatus-level priority analysis. Each work below is cited for its headline
+contribution only, and we attach no finer device correspondence to any of
+them.
+
 Two questions are worth separating, because the manuscript's abstract and its
 own staged reports answer them differently: whether the demodulation is new,
 and whether the use to which it is put is new.
@@ -863,9 +862,38 @@ selection of readout configuration.
 \section{Limitations and evidence needed}
 \label{sec:settle}
 
-The deficiencies identified above are resolvable. They require different
-evidence for the computational, physical, and autonomy claims; no single
-additional accuracy value would address all three.
+Before setting out what further evidence would help, we separate three things
+that this paper has deliberately kept apart, because reading them as one
+category would misstate our result.
+
+\emph{Direct findings of this audit}, each established by an ablation or an
+exact test on the released data: the mismatch between the evaluation unit and
+the claimed unit of generalisation; the fact that the designated category
+assignment is not exceptional among all 105 admissible assignments; the
+self-pair shortcut in Task D; and the mirror-pair reuse in the XOR showcase.
+
+\emph{Absences in the public record}, which are not findings about the
+underlying work: no operator-matched digital reconstruction, no
+backbone-model or prompt disclosure, no agent trace or intervention log, no
+architectural ablation, and no documentation of when the readout and split
+choices were fixed.
+
+\emph{Outside our scope}, on which we take no position: the transmission-matrix
+reproduction and the majorization-order study; the hardware performance of the
+platform; and an exhaustive priority determination for the measurement
+mechanism.
+
+Our findings identify a failure of evidential attribution, not a failure to
+produce repeatable optical measurements. The released experiments show that
+the platform yields stable and decodable pair-dependent signals. They do not
+yet determine whether the decoded structure is relation-specific, whether the
+optical stage improves on an operator-matched digital reconstruction, or
+permit the origin of the scientific interpretation to be distinguished among
+model prior knowledge, agent-level synthesis and human steering.
+
+The deficiencies are resolvable. They require different evidence for the
+computational, physical, and autonomy claims; no single additional accuracy
+value would address all three.
 
 \paragraph{Agent provenance.}
 Attribution of an idea to an autonomous agent requires disclosure of the
