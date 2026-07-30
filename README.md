@@ -11,8 +11,9 @@
 </p>
 
 <p align="center">
-  <a href="mailto:wangzhengjie@sii.edu.cn">Zhengjie Wang</a><br>
-  <sub>Shanghai Innovation Institute</sub>
+  Zhengjie Wang<br>
+  <sub>Shanghai Innovation Institute</sub><br>
+  <sub>wangzhengjie@sii.edu.cn</sub>
 </p>
 
 <p align="center">
