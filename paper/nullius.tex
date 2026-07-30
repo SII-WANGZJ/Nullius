@@ -34,6 +34,10 @@
 \newcommand{\code}[1]{\texttt{\small #1}}
 \newcommand{\target}{arXiv:2604.27092}
 
+% Uniform, clickable identifiers for the bibliography.
+\newcommand{\doi}[1]{\href{https://doi.org/#1}{doi:#1}}
+\newcommand{\arxivid}[1]{\href{https://arxiv.org/abs/#1}{arXiv:#1}}
+
 \title{\bfseries Nullius: auditing a claim of autonomous scientific discovery}
 
 \author{Zhengjie Wang\\[2pt]
@@ -1160,89 +1164,85 @@ subsequent change to it is detectable.
 \begin{thebibliography}{99}\small
 \bibitem{qiushi} S.~Yang \emph{et al.},
   \emph{End-to-end autonomous scientific discovery on a real optical
-  platform}, arXiv:2604.27092 (2026).
-\bibitem{zenodo} S.~Yang, Source materials, DOI 10.5281/zenodo.19890402 (2026).
-
+  platform}, preprint (2026). \arxivid{2604.27092}.
+\bibitem{zenodo} S.~Yang, \emph{Source materials for
+  ``End-to-end autonomous scientific discovery on a real optical platform''},
+  Zenodo (2026). \doi{10.5281/zenodo.19890402}.
 \bibitem{boiko} D.~A.~Boiko, R.~MacKnight, B.~Kline and G.~Gomes,
   \emph{Autonomous chemical research with large language models},
-  Nature \textbf{624}, 570--578 (2023).
+  Nature \textbf{624}, 570--578 (2023). \doi{10.1038/s41586-023-06792-0}.
   % supports: agents credited with running research, not just assisting.
 \bibitem{burger} B.~Burger \emph{et al.},
-  \emph{A mobile robotic chemist}, Nature \textbf{583}, 237--241 (2020).
+  \emph{A mobile robotic chemist}, Nature \textbf{583}, 237--241 (2020). \doi{10.1038/s41586-020-2442-2}.
   % supports: autonomous experimentation on real apparatus predates LLM agents.
 \bibitem{swanson} K.~Swanson, W.~Wu, N.~L.~Bulaong, J.~E.~Pak and J.~Zou,
   \emph{The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies},
-  Nature \textbf{646}, 716--723 (2025).
+  Nature \textbf{646}, 716--723 (2025). \doi{10.1038/s41586-025-09442-9}.
   % supports: multi-agent design followed by experimental validation.
-
 \bibitem{kapoor} S.~Kapoor and A.~Narayanan,
   \emph{Leakage and the reproducibility crisis in machine-learning-based
-  science}, Patterns \textbf{4}, 100804 (2023).
+  science}, Patterns \textbf{4}, 100804 (2023). \doi{10.1016/j.patter.2023.100804}.
   % supports: leakage as a documented, cross-disciplinary failure mode;
   % motivates auditing split logic rather than headline accuracy.
 \bibitem{rosenblatt} M.~Rosenblatt \emph{et al.},
   \emph{Data leakage inflates prediction performance in connectome-based
-  machine learning models}, Nat.\ Commun.\ \textbf{15}, 1829 (2024).
+  machine learning models}, Nat.\ Commun.\ \textbf{15}, 1829 (2024). \doi{10.1038/s41467-024-46150-w}.
   % supports: quantified inflation when correlated repeats cross folds.
 \bibitem{ojala} M.~Ojala and G.~C.~Garriga,
   \emph{Permutation tests for studying classifier performance},
-  J.\ Mach.\ Learn.\ Res.\ \textbf{11}, 1833--1863 (2010).
+  J.\ Mach.\ Learn.\ Res.\ \textbf{11}, 1833--1863 (2010). \href{https://www.jmlr.org/papers/v11/ojala10a.html}{jmlr.org/papers/v11/ojala10a}.
   % supports: the label-permutation null of Sec. B4; the exact enumeration
   % is the finite-population form of their label-permutation test.
 \bibitem{geirhos} R.~Geirhos \emph{et al.},
   \emph{Shortcut learning in deep neural networks},
-  Nat.\ Mach.\ Intell.\ \textbf{2}, 665--673 (2020).
+  Nat.\ Mach.\ Intell.\ \textbf{2}, 665--673 (2020). \doi{10.1038/s42256-020-00257-z}.
   % supports: self-pair cue and mirror reuse as shortcuts; the distinction
   % between intended and exploited structure.
-
 \bibitem{bruning} J.~H.~Bruning \emph{et al.},
   \emph{Digital wavefront measuring interferometer for testing optical
-  surfaces and lenses}, Appl.\ Opt.\ \textbf{13}, 2693--2703 (1974).
+  surfaces and lenses}, Appl.\ Opt.\ \textbf{13}, 2693--2703 (1974). \doi{10.1364/AO.13.002693}.
   % supports: stepped reference phase + per-detector intensity -> interference
   % term, as an established measurement principle.
 \bibitem{yamaguchi} I.~Yamaguchi and T.~Zhang,
   \emph{Phase-shifting digital holography}, Opt.\ Lett.\ \textbf{22},
-  1268--1270 (1997).
+  1268--1270 (1997). \doi{10.1364/OL.22.001268}.
   % supports: recovery of a complex field from intensity-only frames.
 \bibitem{rafayelyan} M.~Rafayelyan \emph{et al.},
   \emph{Large-scale optical reservoir computing for spatiotemporal chaotic
-  systems prediction}, Phys.\ Rev.\ X \textbf{10}, 041037 (2020).
+  systems prediction}, Phys.\ Rev.\ X \textbf{10}, 041037 (2020). \doi{10.1103/PhysRevX.10.041037}.
   % supports: a fixed scattering medium as a random feature map.
 \bibitem{nosek} B.~A.~Nosek, C.~R.~Ebersole, A.~C.~DeHaven and D.~T.~Mellor,
   \emph{The preregistration revolution}, Proc.\ Natl.\ Acad.\ Sci.\ USA
-  \textbf{115}, 2600--2606 (2018).
+  \textbf{115}, 2600--2606 (2018). \doi{10.1073/pnas.1708274114}.
   % supports: the exploratory/confirmatory distinction and pre-registration as
   % the instrument that makes it inspectable.
-
 \bibitem{vanderlugt} A.~Vander~Lugt,
   \emph{Signal detection by complex spatial filtering}, IEEE Trans.\ Inf.\
-  Theory \textbf{10}, 139--145 (1964). doi:10.1109/TIT.1964.1053650.
+  Theory \textbf{10}, 139--145 (1964). \doi{10.1109/TIT.1964.1053650}.
   % supports (headline only): optical correlation as long-established
   % practice. NOT cited for any device-level correspondence.
 \bibitem{weaver} C.~S.~Weaver and J.~W.~Goodman,
   \emph{A technique for optically convolving two functions}, Appl.\ Opt.\
-  \textbf{5}, 1248--1249 (1966). doi:10.1364/AO.5.001248.
+  \textbf{5}, 1248--1249 (1966). \doi{10.1364/AO.5.001248}.
   % supports (headline only): optical convolution of two inputs. NOT cited for
   % the form of the recovered term; that would need full-text verification.
 \bibitem{lightening} H.~Zhu \emph{et al.},
   \emph{Lightening-Transformer: a dynamically-operated, optically
   interconnected photonic transformer accelerator}, in Proc.\ IEEE Int.\ Symp.\
-  High-Performance Computer Architecture (HPCA), 686--703 (2024).
-  doi:10.1109/HPCA57654.2024.00059.
+  High-Performance Computer Architecture (HPCA), 686--703 (2024). \doi{10.1109/HPCA57654.2024.00059}.
   % supports: what a full attention layer requires. An accelerator proposal
   % evaluated in simulation, not a fabricated and measured photonic
   % Transformer chip; no performance figure of theirs is used here.
-
 \bibitem{popoff} S.~M.~Popoff \emph{et al.},
   \emph{Measuring the transmission matrix in optics}, Phys.\ Rev.\ Lett.\
-  \textbf{104}, 100601 (2010).
+  \textbf{104}, 100601 (2010). \doi{10.1103/PhysRevLett.104.100601}.
 \bibitem{hamerly} R.~Hamerly \emph{et al.},
   \emph{Large-scale optical neural networks based on photoelectric
-  multiplication}, Phys.\ Rev.\ X \textbf{9}, 021032 (2019).
+  multiplication}, Phys.\ Rev.\ X \textbf{9}, 021032 (2019). \doi{10.1103/PhysRevX.9.021032}.
   % supports: square-law detection as an established route to optical
   % inner products, relevant to the novelty question.
 \bibitem{attention} A.~Vaswani \emph{et al.},
-  \emph{Attention is all you need}, NeurIPS \textbf{30} (2017).
+  \emph{Attention is all you need}, NeurIPS \textbf{30} (2017). \arxivid{1706.03762}.
 \end{thebibliography}
 
 \end{document}
