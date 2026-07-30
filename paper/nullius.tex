@@ -32,6 +32,12 @@
 \setcounter{totalnumber}{4}
 
 \newcommand{\code}[1]{\texttt{\small #1}}
+% A long path in \code cannot break and overruns the measure. \filepath{} is
+% set verbatim by url.sty, which is told below to break at / and _.
+\usepackage{url}
+\urlstyle{tt}
+\def\UrlBreaks{\do\/\do\_\do\-\do\.}
+\newcommand{\filepath}{\begingroup\urlstyle{tt}\Url}
 \newcommand{\target}{arXiv:2604.27092}
 
 % Uniform, clickable identifiers for the bibliography.
@@ -270,8 +276,9 @@ computational conclusion does not support it.
 \label{sec:setup}
 
 In the audited work, Yang et al.~\cite{qiushi} couple an LLM multi-agent system to a
-free-space optical platform and reports three studies of increasing autonomy, culminating in an
-open-ended investigation that identifies an ``optical bilinear interaction''.
+free-space optical platform and report three studies of increasing autonomy,
+culminating in an open-ended investigation that identifies an ``optical
+bilinear interaction''.
 Two token-dependent fields $E_a,E_b$ are coherently superposed with controlled
 relative phase, scattered by a fixed medium $T$ and detected by a square-law
 camera; four-step phase-shifting demodulation with blank subtraction isolates
@@ -302,8 +309,8 @@ category'' exactly when the two tokens are identical, using the pair labels
 and no measurement at all.
 
 All material below derives from the authors' own deposit~\cite{zenodo}.
-Our pipeline mirrors
-\code{05\_result4\_refine\_paper/scripts/analyze\_advantage\_boundary.py}
+Our pipeline mirrors the released analysis script
+\filepath{05_result4_refine_paper/scripts/analyze_advantage_boundary.py},
 so that any difference is attributable to a single documented modification.
 
 \paragraph{Pre-specification of our own analyses.}
