@@ -13,9 +13,8 @@
 \newcommand{\code}[1]{\texttt{\small #1}}
 \newcommand{\target}{arXiv:2604.27092}
 
-\title{\bfseries Retrieval or discovery?\\
-Minimum evidence standards for attributing scientific\\ findings to autonomous
-agents}
+\title{\bfseries Auditing a claim of autonomous scientific discovery:\\
+benchmark integrity, evaluation units, and evidential scope}
 
 \author{Zhengjie Wang\\[2pt]
 \small Shanghai Innovation Institute\\
@@ -43,7 +42,7 @@ autonomously proposed and experimentally validated a previously unreported
 optical mechanism, an ``optical bilinear interaction'' analogous to the
 compatibility operation in Transformer attention (\target{}). Working
 entirely from the authors' own released data and analysis code, we reproduce
-their published accuracies to within $5\times10^{-4}$ and then show that the
+the released benchmark accuracies to within $5\times10^{-4}$ and then show that the
 benchmark supporting the computational claim does not survive elementary
 integrity checks: the reported cross-split generalisation is accounted for by
 the presence of self-paired samples, and the remaining task accuracies are
@@ -55,11 +54,11 @@ null distribution over all 105 admissible category assignments
 ($p=102/105$). In the held-out-category task, above-chance performance occurs
 only when self-pairs are present in both the training and the test set;
 removing them from either side returns accuracy to chance. We emphasise what
-we do \emph{not} claim: we find no
-evidence of data fabrication, the hardware measurements appear sound, and the
-automation achievement is real. The failure is one of evidence--claim
-alignment, and it is the kind that \textsc{Probe} is designed to catch before
-publication.
+we do \emph{not} claim: we find no evidence in the inspected data that the
+measurements were fabricated or internally inconsistent, and the reported
+hardware automation may be substantial but is not evaluated by this audit.
+The failure is one of evidence--claim alignment within the specific experiment
+that carries the computational conclusion.
 \end{abstract}
 
 \section{Introduction}
@@ -91,8 +90,8 @@ most attractive---saturated with the material at issue. Attribution therefore
 cannot rest on the output. It has to rest on controls and disclosures that
 were never previously required, because they were never previously necessary.
 
-We propose five such requirements (Sec.~\ref{sec:probe}), chosen to be
-individually cheap and jointly close to sufficient, and then apply them to a
+We propose five such requirements (Sec.~\ref{sec:probe}) as a minimal
+starting set of reporting and control obligations, and then apply them to a
 recent and prominent claim (Secs.~\ref{sec:setup}--\ref{sec:provenance}).
 The application is instructive beyond the individual case: two of the failures
 we find are invisible to ordinary peer review, because they live in the split
@@ -208,10 +207,13 @@ For each held-out category the test set contains 4 distinct positive pairs, of
 which 2 are self-pairs $(x,x)$, against 24 distinct negatives. The
 measurement-free identity-rule baseline
 ``$\text{same category} := (x=y)$'' therefore attains balanced accuracy
-$\tfrac12\bigl(\tfrac24 + \tfrac{24}{24}\bigr) = 0.750$. Every value obtained
-under the refined held-out-category Task-D protocol reproduced here lies at or
-below this baseline; we do not extend the comparison to values reported under
-the different fixed-holdout protocol of the main manuscript. Removing all
+$\tfrac12\bigl(\tfrac24 + \tfrac{24}{24}\bigr) = 0.750$. Every full-readout
+value displayed in Fig.~\ref{fig:D} lies at or below this baseline. We do not
+extend the comparison either to values reported under the different
+fixed-holdout protocol of the main manuscript, or to the higher values the
+supplement obtains under searched sparse-tap and output-budget
+configurations; those are exactly the configurations whose selection timing
+the public record does not document (Sec.~\ref{sec:search}). Removing all
 self-paired samples collapses the optical feature to chance
 (Fig.~\ref{fig:D}), identically at both readout scales, while the per-fold
 values are constant to four decimals in the unablated case---the signature of
@@ -234,6 +236,12 @@ unaffected by the ablation.}
 \end{figure}
 
 \subsection{B3: Tasks A--C are inflated by repeat leakage}
+
+Throughout this subsection, ``leakage'' means leakage relative to a claim of
+out-of-pair or semantic generalisation. If the tasks were intended only to ask
+whether repeated measurements of an already-observed pair can be recognised,
+splitting repeats at random is legitimate; the tasks then simply cannot
+support claims about category structure or new pairs.
 
 The released scoring applies \code{StratifiedKFold} over 320 samples
 comprising 64 pairs $\times$ 5 physical repeats, so repeats of the same pair
@@ -402,11 +410,16 @@ that the deposit does not contain.
 \label{sec:operator}
 
 Equation~\eqref{eq:B} is the cross term of two-beam interference, isolated by
-four-step phase shifting. Under linear optics the physically demodulated
-$B$ and the digital product $(TE_a)^{\ast}\!\odot(TE_b)$ formed from
-separately measured complex fields are the same quantity up to noise. The
-decisive control is therefore an equality test between them under the same
-$T$.
+four-step phase shifting. Under linear optics the jointly demodulated field
+and the digital product $A_x^{\ast}\!\odot A_y$ of the separately measured
+complex output fields $A_x, A_y$ are the same quantity up to noise. The
+decisive control is therefore an equality test between the jointly demodulated
+field and that digital product, formed from the fields the \emph{actual} two
+arms produce. We deliberately do not phrase this as a shared-$T$ test: as
+Sec.~\ref{sec:ideal} shows, the released estimator does not closely satisfy
+the shared-operator identities, so $A_x=T_xE_x$ and $A_y=T_yE_y$ with
+$T_x\neq T_y$ must be admitted. The shared-operator case is a special
+instance, not the general requirement.
 
 The released controls are not this test. The ``digital bilinear'' baseline is
 $z(x)\,z(y)$ where $z$ is binned camera \emph{intensity}, discarding phase;
@@ -420,6 +433,43 @@ records only single-token \emph{intensity}---it cannot be performed on the
 released data. It can, however, be performed on the same apparatus: the
 self-referenced transmission-matrix measurement in the earlier studies of the
 same work recovers exactly the complex fields it requires.
+
+\section{What is, and is not, implemented relative to attention}
+\label{sec:attention}
+
+The manuscript describes the measured quantity as structurally analogous to a
+core operation in Transformer attention. We set out precisely how far that
+correspondence extends, because the claim is otherwise easy to read as
+stronger than the experiment supports.
+
+An attention compatibility score is
+\begin{equation}
+  s(x,y) \;=\; x^{\top} W_Q^{\top} W_K\, y ,
+\end{equation}
+while a measured detector channel supplies
+\begin{equation}
+  B_k(x,y) \;=\; x^{\dagger} K_k\, y .
+\end{equation}
+Both are two-input bilinear (respectively sesquilinear) compatibility forms,
+so the stated analogy holds in that weak mathematical sense, and we do not
+dispute it at that level.
+
+The differences are the substance. $W_Q$ and $W_K$ are learned, may be
+distinct, and their product is a general matrix; $K_k$ is fixed by the medium
+and is not adjustable at all. Under the ideal shared-operator model each
+unbinned $K_p$ is a rank-one positive semidefinite outer product and a binned
+$K_k$ is a finite sum of such terms, so the realisable operator family is a
+restricted subclass rather than a general learnable bilinear map---though, as
+Sec.~\ref{sec:ideal} notes, if the two arms do not share an operator this
+particular restriction is weaker than it appears. Beyond the operator itself,
+the experiment does not construct a token-pair score matrix, and it implements
+no scaling, no softmax normalisation, no masking, no value projection and no
+value aggregation. No end-to-end attention task is run, and the readout is a
+linear classifier applied digitally to the measured features.
+
+The defensible reading is therefore that the experiment demonstrates a
+restricted physical pair-feature primitive, not an implementation of
+Transformer attention and not attention hardware.
 
 \section{Evaluation search space}
 \label{sec:search}
@@ -471,7 +521,33 @@ reports characterise the contribution in measured terms: phase-stepping
 interferometry is ``a mature technique'', and ``the methodological novelty is
 not the demodulation itself but its application to extract a computationally
 meaningful bilinear observable''. The abstract of the manuscript describes the
-same object as a ``previously unreported physical mechanism''.
+same object as a ``previously unreported physical mechanism''. We record this
+as an internal inconsistency in how the contribution is characterised. It is
+not a completed novelty audit: establishing that the physical claim is
+overstated would require a systematic prior-art search over phase-shifting
+interferometry, coherent and heterodyne detection, optical and joint-transform
+correlators, coherent optical multiplication, complex-field inner-product
+measurement, photonic bilinear computing and scattering-medium random
+features, which we have not carried out. Our position is that physical
+novelty is \emph{not established} by the released materials, not that it is
+absent.
+
+\subsection{Architectural attribution}
+
+A separate attribution problem sits beneath the provenance one, and survives
+even if the trajectory were accepted as fully autonomous. The manuscript
+credits specific architectural components---Meta-Trace, the dual-layer
+separation, role--phase decoupling, accumulated research experience---with
+sustaining the long-horizon trajectory. A single successful run cannot
+identify which component, if any, produced the outcome. The released material
+contains no single-agent baseline, no run with Meta-Trace replaced by ordinary
+rolling summarisation, no fixed-workflow comparison, no ablation of the
+Critical Reviewer role, no run without inherited prior-study experience, no
+variation of random seed, and no variation of backbone model. Nor is there a
+human-expert time or cost baseline against which the reported speed advantage
+could be assessed. The reported totals---145.9 million tokens, 3{,}242 model
+calls, 1{,}242 tool invocations---are resource counts. They record what was
+spent, not which architectural choice was responsible for what was obtained.
 
 \section{Discussion}
 \label{sec:discussion}
@@ -589,14 +665,15 @@ non-public submission materials.
 \section{What we do not claim}
 \label{sec:caveats}
 
-We find no evidence of fabrication. The raw frames, repeat structure, drift
-monitoring and transmission-matrix data are substantial and internally
-consistent, and the reported focusing and coherence-order results are
-plausible on their face. The automation demonstrated---sustained agent
-control of a real optical platform over hundreds of steps---is a genuine
-engineering result that our findings do not touch. Our claim is narrower and,
-we think, more serious: the specific evidence offered for the specific central
-conclusion does not support it.
+We find no evidence in the inspected Result-4 data that the hardware
+measurements were fabricated or internally inconsistent. The raw frames,
+repeat structure and drift monitoring are substantial and mutually consistent.
+We make no assessment of the reported hardware automation---sustained agent
+control of a real optical platform over hundreds of steps---because the
+materials required to evaluate it are not public and we did not audit it; our
+findings neither support nor challenge it. Our claim is narrower and, we
+think, more serious: the specific evidence offered for the specific central
+computational conclusion does not support it.
 
 \section{Evidence needed to adjudicate the claims}
 \label{sec:settle}
@@ -711,13 +788,6 @@ the roll-up digest over all 1543 consumed files is
 \code{b273f7f6c8d5bd8d7bb849e1d9908ea35a8ec171b9870b7cd2cb27b496351350}, so any
 subsequent change to the deposit is detectable. The environment is pinned in
 \code{environment.yml} and \code{requirements-lock.txt}.
-
-\section*{Correspondence with the authors}
-% TODO: fill in after the enquiry has been sent and the response window closed.
-On [date] we sent the corresponding authors a set of technical questions
-covering the operator-matched control, the scoring protocol, the timing of the
-bin-size selection, and the backbone model. [Their response is incorporated
-above / No response had been received by [date].]
 
 \begin{thebibliography}{9}\small
 \bibitem{qiushi} S.~Yang \emph{et al.},
