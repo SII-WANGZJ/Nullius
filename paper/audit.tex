@@ -24,9 +24,7 @@
 \newcommand{\code}[1]{\texttt{\small #1}}
 \newcommand{\target}{arXiv:2604.27092}
 
-\title{\bfseries Nullius: auditing a claim of autonomous scientific
-discovery\\[2pt]
-\large benchmark integrity, evaluation units, and evidential scope}
+\title{\bfseries Nullius: auditing a claim of autonomous scientific discovery}
 
 \author{Zhengjie Wang\\[2pt]
 \small Shanghai Innovation Institute\\
@@ -68,6 +66,11 @@ findings. We find no evidence in the inspected data that measurements were
 fabricated or internally inconsistent; the reported hardware automation may be
 substantial and is not evaluated here, and the two preceding studies in the
 target work were not audited.
+
+\vspace{0.7em}
+\noindent\textbf{Keywords:} benchmark integrity; unit of generalisation; data
+leakage; permutation testing; shortcut learning; reproducibility; autonomous
+scientific discovery; optical computing.
 \end{abstract}
 
 \section{Introduction}
@@ -386,11 +389,12 @@ $0.043$--$0.109$ at both readouts (Fig.~\ref{fig:leak}c).
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig2_leakage.pdf}
-\caption{\textbf{Tasks B and C depend on repeat-level splitting.}
-(\textbf{a},\textbf{b}) Balanced accuracy at $\mathrm{bin}=25$ under the
-released scoring, which splits the five physical repeats of a pair across
-folds, and under pair-grouped scoring, which does not. (\textbf{c}) The
-Task-C collapse is not a fold-count artefact: it persists across
+\caption{\textbf{Tasks B and C depend on repeat-level splitting.} Left,
+balanced accuracy at $\mathrm{bin}=25$ under the released scoring, which
+splits the five physical repeats of a pair across folds, and under
+pair-grouped scoring, which does not; the value column gives released
+$\rightarrow$ grouped for each feature family. Right, the Task-C outcome is
+not a fold-count artefact: it persists across
 $n_{\text{splits}}\in\{2,4,5,8\}$ at both readouts, with every test class
 represented in training in all cases.}
 \label{fig:leak}
