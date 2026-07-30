@@ -596,24 +596,108 @@ engineering result that our findings do not touch. Our claim is narrower and,
 we think, more serious: the specific evidence offered for the specific central
 conclusion does not support it.
 
-\section{What would settle it}
+\section{Evidence needed to adjudicate the claims}
 \label{sec:settle}
 
-% TODO: expand each into 2--3 sentences.
-\begin{enumerate}\itemsep2pt
-  \item Disclose backbone model, version and training cut-off relative to all
-        target papers.
-  \item Report a prior-knowledge control: $N$ independent single-shot queries
-        to the bare backbone from the same platform description, scored for
-        whether the mechanism is proposed and whether it is correctly
-        identified as standard coherent detection.
-  \item Perform the operator-matched equality test of Sec.~\ref{sec:operator}.
-  \item Re-evaluate on a benchmark with genuine relational structure, with
-        pair-grouped splits and self-pairs excluded, against the
-        measurement-free identity-rule baseline.
-  \item Release the agent trace, intervention log and $\geq 3$ independent
-        runs.
-\end{enumerate}
+The deficiencies identified above are resolvable. They require different
+evidence for the computational, physical, and autonomy claims; no single
+additional accuracy value would address all three.
+
+\paragraph{Agent provenance.}
+Attribution of an idea to an autonomous agent requires disclosure of the
+backbone model and exact version, inference settings, initial and system
+prompts, retrieval sources, progressively disclosed skills, candidate
+directions, direction-selection decisions, and human interventions. The
+complete time-ordered Meta-Trace and tool trajectory should be released in a
+form that distinguishes contemporaneous records from summaries produced
+after the experiment. If safety, licensing, or instrument-access constraints
+prevent release of particular implementation details, the omitted fields and
+their relevance to the claimed discovery should be identified explicitly.
+Result-level data alone cannot establish the causal origin of the hypothesis.
+
+\paragraph{Prior-availability control.}
+The relevant question is not whether a current language model can reproduce
+the mechanism after publication, but whether the backbone available to the
+agent before the study already contained or could readily elicit the same
+proposal. This should be tested using the exact original model snapshot,
+without the agent scaffold or experimental feedback, from the same initial
+platform description. The prompt, decoding parameters, number of independent
+queries, retrieval permissions, and a prospectively defined scoring rule
+should be fixed before inspection of the outputs. The assessment should
+separately record whether the model proposes the interference cross term and
+whether it identifies the underlying phase-stepping and coherent-detection
+principles as established knowledge. Such a control would measure prior
+availability; it would not by itself prove the causal origin of the observed
+trajectory.
+
+\paragraph{Operator-matched physical control.}
+For each detector pixel, the ideal shared-operator model predicts
+\begin{equation}
+ B_p(x,y)=(TE_x)_p^{*}(TE_y)_p .
+\end{equation}
+For a binned channel $\mathcal{B}_k$, the corresponding reconstruction is
+\begin{equation}
+ \bar B_k^{\mathrm{digital}}(x,y)
+ =
+ \sum_{p\in\mathcal{B}_k}
+ (TE_x)_p^{*}(TE_y)_p .
+\end{equation}
+The decisive control is therefore to measure the two propagated complex
+fields separately under the same physical operator and compare this digital
+reconstruction, channel by channel, with the jointly demodulated
+$\bar B_k^{\mathrm{physical}}$. Agreement should be quantified in amplitude,
+phase, residual structure, repeatability, and downstream performance under
+identical feature budgets and splits. If the two input arms implement
+different operators, the corresponding $T_x^{\dagger}T_y$ model should be
+stated and tested instead. This experiment would determine whether joint
+measurement supplies information beyond separately measured complex fields;
+intensity products and random-operator pseudo-$B$ controls do not answer that
+question.
+
+\paragraph{Benchmark with a valid unit of generalisation.}
+A confirmatory benchmark should contain relational structure in the inputs
+rather than attach semantic labels to independent random vectors. It should
+use tokens, codebooks, or physical inputs not involved in configuration
+selection. All repeated measurements of the same physical condition must
+remain in the same fold whenever the claim concerns generalisation to new
+conditions. Self-pairs should either be excluded from relation evaluation or
+reported as a separate stratum, and performance should be compared with
+measurement-free structural rules and an exact or permutation null over
+admissible label assignments. Pair identity may be evaluated as repeat
+recognition, but it should not be interpreted as out-of-pair generalisation.
+The final test should use a new acquisition session, codebook, vocabulary, or
+physical operator after the evaluation protocol has been frozen.
+
+\paragraph{Independent agent and hardware replications.}
+A single successful trajectory cannot establish that the reported outcome is
+a reproducible property of the agent architecture. The open-ended study
+should be repeated independently from the same initial information, with all
+runs and unsuccessful directions retained. At least three complete runs would
+provide a minimal existence check, although more are required to estimate a
+meaningful discovery rate for a stochastic system. Replication should also
+separate agent stochasticity from hardware specificity by including, where
+feasible, an independent acquisition session or physical realisation. The
+reported outcomes should include the frequency with which the mechanism is
+proposed, selected, experimentally supported, rejected, or replaced by
+another direction.
+
+\paragraph{Pre-registered confirmation.}
+Before the confirmatory run, the token set, task definitions, train--test
+unit, treatment of self-pairs, detector binning, output budget, feature
+families, classifier, hyperparameters, primary endpoint, and statistical
+comparison should be frozen in a time-stamped protocol. Exploratory searches
+over bin size, $n_{\mathrm{out}}$, task construction, or feature family may be
+reported in full, but the selected configuration should then be evaluated on
+untouched data without further adaptation. This separation would turn the
+released performance landscape from an exploratory result into a test of a
+specified computational claim.
+
+Together, these additions would not require treating autonomous discovery as
+a binary label. They would allow readers to distinguish four progressively
+stronger conclusions: automated execution of a known protocol, recombination
+of available scientific knowledge, generation and testing of a new
+engineering interpretation, and experimental identification of a finding
+not available to the model or its operators beforehand.
 
 \section*{Data and code availability}
 All analysis code, the audit modifications and the full result files are at
