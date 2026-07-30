@@ -10,6 +10,16 @@
 \usepackage[colorlinks=true,allcolors=blue!60!black]{hyperref}
 \usepackage{microtype}
 
+% \belowcaptionskip defaults to 0pt, so a caption placed above a table sits
+% flush against its top rule. Load after hyperref, as the package requires.
+\usepackage[skip=8pt]{caption}
+
+% Prose columns in a narrow table must not be justified: at these widths
+% justification forces hyphenation and inter-word holes. L{} is a ragged-right
+% fixed-width column.
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
 % Default float parameters are conservative enough that, with nine floats in a
 % 14-page body, the queue backs up and every table lands after the appendices.
 % Relax them so floats settle near the text that discusses them.
@@ -29,7 +39,7 @@
 \author{Zhengjie Wang\\[2pt]
 \small Shanghai Innovation Institute\\
 \small \texttt{wangzhengjie@sii.edu.cn}}
-\date{\today}
+\date{Version 0.3 --- 30 July 2026}
 
 \begin{document}
 \maketitle
@@ -78,9 +88,12 @@ scientific discovery; optical computing.
 
 LLM-based agents have moved, over a short period, from assisting predefined
 scientific workflows to being credited with scientific results in their own
-right. The claims made on their behalf have escalated accordingly: not that a
-system executed a protocol competently, but that it \emph{discovered}
-something that was not previously known.
+right: planning and executing chemical syntheses~\cite{boiko}, operating
+self-driving laboratories~\cite{burger}, and designing candidate biomolecules
+that are then validated experimentally~\cite{swanson}. The claims made on
+their behalf have escalated accordingly: not that a system executed a protocol
+competently, but that it \emph{discovered} something that was not previously
+known.
 
 This escalation has outrun the evidence customarily supplied to support it,
 for a structural reason. \emph{The artefact produced by genuine discovery and
@@ -92,30 +105,75 @@ agent steered by its operators toward a direction they found promising---all
 four emit the same thing at the end. Working code, a measured effect, a
 coherent manuscript. Nothing in the output separates them.
 
-For human authorship this problem is bounded, and the bounding is so
-thoroughly built into scientific convention that it is easy to forget it is
-there. A human author's prior knowledge is finite, largely declarable, and
-traceable through citation; the reader can ask what was known and when.
-For an LLM agent the prior is a training distribution that is undisclosed,
-effectively unbounded, and---in precisely the cases where discovery claims are
-most attractive---saturated with the material at issue. Attribution therefore
-cannot rest on the output. It has to rest on controls and disclosures that
-were never previously required, because they were never previously necessary.
+Human and model-assisted discovery pose different provenance challenges. For
+contemporary foundation models, the relevant training corpus, the content
+memorised from it, and the prior availability of a proposed mechanism are
+generally not inspectable by readers. Attribution therefore cannot rest on the
+output alone; it has to rest on controls and disclosures that conventional
+reporting was never designed to supply.
 
-We propose five such requirements (Sec.~\ref{sec:probe}) as a minimal
-starting set of reporting and control obligations, and then apply them to a
-recent and prominent claim (Secs.~\ref{sec:setup}--\ref{sec:provenance}).
-The application is instructive beyond the individual case: two of the failures
-we find are invisible to ordinary peer review, because they live in the split
-logic and the label construction of a benchmark rather than in any statement
-the manuscript makes. They are, however, immediately visible to anyone who
-runs the released code with one line changed---which is the argument for
-requiring that the code be released, and for looking at it.
+We propose five such requirements (Sec.~\ref{sec:probe}) as a minimal starting
+set of reporting and control obligations, and then apply them to a recent and
+prominent claim~\cite{qiushi} (Secs.~\ref{sec:setup}--\ref{sec:provenance}).
+The application is instructive beyond the individual case: several of the
+central evaluation limitations become visible only when the released split and
+label logic are re-executed under alternative units of generalisation. That
+they can be surfaced at all depends on the analysis code and data having been
+released~\cite{zenodo}, which is itself an argument for the practice.
 
 We state at the outset what this exercise is not. We allege no misconduct, we
 find no evidence of fabrication in the data we inspected, and we take no
 position on the reported hardware automation, which we did not audit.
 Section~\ref{sec:caveats} makes the boundaries explicit.
+
+\section{Audit scope and evaluation design}
+\subsection{Summary of findings}
+\label{sec:summary}
+
+Table~\ref{tab:summary} states each claim we examined, the test applied, the
+finding, and---in the final column---the conclusion that survives our audit.
+That column is not a courtesy. Several of the original observations remain
+intact under our re-analysis, and the distinction between what survives and
+what does not is the substance of this paper.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Claims examined, tests applied, and what still stands.}
+\label{tab:summary}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{L{3.1cm}L{3.3cm}L{4.0cm}L{4.0cm}}
+\toprule
+Claim (as supported publicly) & Audit test & Finding & What remains supported \\
+\midrule
+XOR interaction, at sample-level $1.000$ & pair, mirror and token grouping
+& not retained under any pair-respecting split & repeated measurements of the
+16 fixed pairs are decodable \\
+\addlinespace
+Semantic relation, at high sample-level accuracy & grouped CV plus exact label
+permutation & designated partition not exceptional ($102/105$, exact) & pair
+identity is decodable \\
+\addlinespace
+Task D transfer, Complex-B above chance & identity rule and $2\times2$
+ablation & above-chance value present only with self-pairs on both sides &
+a decodable difference exists under the fixed protocol \\
+\addlinespace
+Attention analogy, from a bilinear observable & operator comparison
+& weak form only & a fixed physical pair-feature primitive \\
+\addlinespace
+Physical novelty of the measured cross term & scoped bibliographic comparison
+(Sec.~\ref{sec:priorart}) & demodulation ingredients have established
+precedent; priority of the specific combination unresolved here
+& the cross term is measurable on the platform \\
+\addlinespace
+Autonomous discovery, from trajectory narrative and resource counts &
+provenance and ablation audit & not assessable from the public record &
+the automation may be substantial; this audit does not evaluate it \\
+\addlinespace
+Results 2 and 3 (transmission matrix, majorization) & ---
+& \textbf{not audited} & no conclusion drawn either way \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Audit criteria}
 \label{sec:probe}
@@ -131,56 +189,9 @@ generalisation; and \emph{Evaluation} pre-registration, or full disclosure of
 the search when choices were not fixed in advance. They are proposed as a
 minimal starting set, not a sufficient one.
 
-\subsection{Summary of findings}
-\label{sec:summary}
+\subsection{Scope, and what we do not claim}
+\label{sec:scope}\label{sec:caveats}
 
-Table~\ref{tab:summary} states each claim we examined, what the public
-material establishes, the test applied, and---in the final column---the
-conclusion that survives our audit. That column is not a courtesy. Several of
-the original observations remain intact under our re-analysis, and the
-distinction between what survives and what does not is the substance of this
-paper.
-
-\begin{table}[!htbp]
-\centering\small
-\caption{Claims examined, tests applied, and what still stands.}
-\label{tab:summary}
-\begin{tabular}{p{2.2cm}p{2.5cm}p{2.7cm}p{2.2cm}p{3.3cm}}
-\toprule
-Claim & Public material shows & Audit test & Outcome (finding) & Minimum conclusion that stands \\
-\midrule
-XOR interaction & sample-level $1.000$ & pair, mirror and token grouping
-& not retained under any pair-respecting split & repeated measurements of the
-16 fixed pairs are decodable \\
-\addlinespace
-Semantic relation & high sample-level accuracy & grouped CV plus exact label
-permutation & designated partition not exceptional ($102/105$, exact) & pair
-identity is decodable \\
-\addlinespace
-Task D transfer & Complex-B above chance & identity rule and $2\times2$
-ablation & above-chance value present only with self-pairs on both sides &
-a decodable difference exists under the fixed protocol \\
-\addlinespace
-Attention analogy & a bilinear observable & operator comparison
-& weak form only & a fixed physical pair-feature primitive \\
-\addlinespace
-Physical novelty & a measurable cross term & scoped bibliographic comparison
-(Sec.~\ref{sec:priorart}) & demodulation ingredients have established
-precedent; priority of the specific combination unresolved by this audit
-& the cross term is measurable on the platform \\
-\addlinespace
-Autonomous discovery & trajectory narrative and resource counts &
-provenance and ablation audit & not assessable from the public record &
-the automation may be substantial; this audit does not evaluate it \\
-\addlinespace
-Results 2 and 3 & transmission-matrix and majorization studies & ---
-& \textbf{not audited} & no conclusion drawn either way \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Scope and unaudited claims}
-\label{sec:scope}
 
 This audit is deliberately claim-specific. We examine the released Result-4
 pipeline because it provides the empirical basis for the manuscript's claims
@@ -219,8 +230,6 @@ cannot determine whether an operator-matched reconstruction, additional
 agent-provenance records or alternative evaluation protocols exist in
 non-public submission materials.
 
-\subsection{What we do not claim}
-\label{sec:caveats}
 
 We find no evidence in the inspected Result-4 data that the hardware
 measurements were fabricated or internally inconsistent. The raw frames,
@@ -232,11 +241,11 @@ findings neither support nor challenge it. Our claim is narrower and, we
 think, more serious: the specific evidence offered for the specific central
 computational conclusion does not support it.
 
-\section{Reproduction and evaluation design}
+\subsection{The audited experiments}
 \label{sec:setup}
 
-The target work couples an LLM multi-agent system to a free-space optical
-platform and reports three studies of increasing autonomy, culminating in an
+The target work~\cite{qiushi} couples an LLM multi-agent system to a
+free-space optical platform and reports three studies of increasing autonomy, culminating in an
 open-ended investigation that identifies an ``optical bilinear interaction''.
 Two token-dependent fields $E_a,E_b$ are coherently superposed with controlled
 relative phase, scattered by a fixed medium $T$ and detected by a square-law
@@ -261,8 +270,9 @@ so that any difference is attributable to a single documented modification.
 Since we ask the original work for pre-registration (Sec.~\ref{sec:search}),
 we state our own status plainly. The XOR audit of Sec.~\ref{sec:xor} was
 pre-specified: the ten tests, the splitting regimes and the reporting rule
-that all three possible outcomes would be published were written into the
-repository README and committed before the analysis was run. The
+that all three possible outcomes would be published are recorded in
+\code{docs/PRE\_REGISTRATION.md} in the repository, committed before the
+analysis was run (pre-analysis commit \code{fcff795}). The
 semantic-benchmark analyses of Secs.~\ref{sec:benchmark}--\ref{sec:ideal} were
 \emph{not} pre-specified in that sense; they were exploratory, developed while
 reading the released code. We mitigated this in three ways---exact replication
@@ -348,9 +358,10 @@ the cross-split same-category task under the refined held-out-category
 protocol, before and after removing every self-paired sample $(x,x)$. The
 dashed rule at $0.750$ is the accuracy of the measurement-free identity rule
 ``same category $:=(x=y)$'', which uses the pair labels and no optical data at
-all. The optical Complex-B feature does not exceed that rule, and falls to
-chance once self-pairs are removed---identically at the coarse
-($\mathrm{bin}=25$) and speckle-matched ($\mathrm{bin}=10$) readouts. The
+all. The optical Complex-B feature does not exceed that rule, and no evidence
+of above-chance transfer remains once self-pairs are removed ($0.4979$ at
+$\mathrm{bin}=25$ and $0.4948$ at $\mathrm{bin}=10$; point estimates against a
+$0.500$ reference, with no significance claimed). The
 raw-input baselines, which involve no optical propagation whatsoever, are
 unaffected by the ablation.}
 \label{fig:D}
@@ -698,7 +709,7 @@ core operation in Transformer attention. We set out precisely how far that
 correspondence extends, because the claim is otherwise easy to read as
 stronger than the experiment supports.
 
-An attention compatibility score is
+An attention compatibility score~\cite{attention} is
 \begin{equation}
   s(x,y) \;=\; x^{\top} W_Q^{\top} W_K\, y ,
 \end{equation}
@@ -842,7 +853,8 @@ selected configuration is evaluated once---was not applied.
 \centering\small
 \caption{Publicly visible evaluation search space for the Result-4 benchmark.}
 \label{tab:search}
-\begin{tabular}{p{3.0cm}p{4.0cm}p{3.4cm}p{2.6cm}}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{L{3.2cm}L{4.2cm}L{3.6cm}L{2.9cm}}
 \toprule
 Choice & Publicly observed search & Selection timing & Independent confirmation \\
 \midrule
@@ -1057,7 +1069,7 @@ semidefinite, and is in that respect \emph{less} constrained than the
 shared-operator case. Resolving this requires acquisition-level information
 that the deposit does not contain.
 
-\section{The \textsc{Probe} checklist in full}
+\section{The PROBE checklist in full}
 \label{app:probe}
 
 \paragraph{P --- Provenance disclosure.}
@@ -1096,17 +1108,30 @@ All analysis code, the audit modifications and the full result files are at
 \url{https://github.com/SII-WANGZJ/Nullius}. The audit consumes only the
 authors' public deposit (DOI 10.5281/zenodo.19890402); no data of our own were
 generated, and the deposit is not redistributed. Every file read from the
-deposit is recorded with its SHA-256 in \code{results/input\_manifest.json};
-the roll-up digest over all 1543 consumed files is
-\code{b273f7f6c8d5bd8d7bb849e1d9908ea35a8ec171b9870b7cd2cb27b496351350}, so any
-subsequent change to the deposit is detectable. The environment is pinned in
-\code{environment.yml} and \code{requirements-lock.txt}.
+deposit is recorded with its SHA-256 in \code{results/input\_manifest.json},
+together with a roll-up digest over all 1543 consumed files beginning
+\code{b273f7f6c8d5bd8d7}, so any subsequent change to the deposit is
+detectable. The exact package versions the reported numbers were computed with
+are pinned in \code{requirements-lock.txt}; \code{requirements.txt} gives the
+four direct dependencies with minimum versions.
 
 \begin{thebibliography}{99}\small
 \bibitem{qiushi} S.~Yang \emph{et al.},
   \emph{End-to-end autonomous scientific discovery on a real optical
   platform}, arXiv:2604.27092 (2026).
 \bibitem{zenodo} S.~Yang, Source materials, DOI 10.5281/zenodo.19890402 (2026).
+
+\bibitem{boiko} D.~A.~Boiko, R.~MacKnight, B.~Kline and G.~Gomes,
+  \emph{Autonomous chemical research with large language models},
+  Nature \textbf{624}, 570--578 (2023).
+  % supports: agents credited with running research, not just assisting.
+\bibitem{burger} B.~Burger \emph{et al.},
+  \emph{A mobile robotic chemist}, Nature \textbf{583}, 237--241 (2020).
+  % supports: autonomous experimentation on real apparatus predates LLM agents.
+\bibitem{swanson} K.~Swanson, W.~Wu, N.~L.~Bulaong, J.~E.~Pak and J.~Zou,
+  \emph{The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies},
+  Nature \textbf{646}, 716--723 (2025).
+  % supports: multi-agent design followed by experimental validation.
 
 \bibitem{kapoor} S.~Kapoor and A.~Narayanan,
   \emph{Leakage and the reproducibility crisis in machine-learning-based
