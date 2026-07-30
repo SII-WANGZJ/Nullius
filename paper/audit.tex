@@ -53,8 +53,11 @@ chance, and same-category classification is not significant under the exact
 null distribution over all 105 admissible category assignments
 ($p=102/105$). In the held-out-category task, above-chance performance occurs
 only when self-pairs are present in both the training and the test set;
-removing them from either side returns accuracy to chance. We emphasise what
-we do \emph{not} claim: we find no evidence in the inspected data that the
+removing them from either side returns accuracy to chance. The second
+experiment supporting the same conclusion, a four-token XOR showcase, behaves
+the same way: its released accuracy of $1.000$ is obtained under a
+sample-level split and is not retained under any split that keeps a pair's
+repeated measurements together. We emphasise what we do \emph{not} claim: we find no evidence in the inspected data that the
 measurements were fabricated or internally inconsistent, and the reported
 hardware automation may be substantial but is not evaluated by this audit.
 The failure is one of evidence--claim alignment within the specific experiment
@@ -361,6 +364,93 @@ removed & removed & 0.4979 & 10 / 120 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\subsection{B6: the XOR showcase tests repeat recognition, not relation
+generalisation}
+\label{sec:xor}
+
+The four-token XOR showcase is the second experiment used to support the
+computational interpretation of Complex-B, and its logic differs from the
+semantic benchmark: an additive linear readout on concatenated single-token
+features genuinely cannot express a parity relation, whereas a product feature
+can. That identity is not in dispute. What we test is whether the released
+evaluation demonstrates a generalisable interaction feature.
+
+The experiment contains all 16 ordered token pairs, each measured five times,
+with relation label $y_{\mathrm{XOR}}(x,y)=(x+y)\bmod 2$: eight positive and
+eight negative ordered pairs. The relation is symmetric, and all four
+self-pairs belong to the negative class. Parity here is a property of the
+token \emph{index}; the tokens themselves are random phase patterns generated
+from unrelated seeds, so parity is not an encoded optical attribute.
+
+We first reproduce the released sample-level evaluation exactly: Complex-B
+attains balanced accuracy $1.0000$ on both 16-way pair identity and binary XOR
+classification. That split distributes the repeated measurements of every
+ordered pair across training and test folds. Because Complex-B also identifies
+the 16 observed pairs perfectly, the XOR score cannot distinguish learning the
+parity relation from recognising a pair and recalling its previously observed
+label. For a representation that resolves every pair, any fixed pair-to-label
+table is learnable; no XOR-specific geometry is required.
+
+We therefore re-evaluate with the physical pair, rather than the camera
+repeat, as the unit of generalisation (Fig.~\ref{fig:xor}). Because the number
+of distinct pairs is small enough that fold composition matters, we report
+both grouped $K$-fold estimates and exhaustive leave-one-group-out, pooling
+all out-of-fold predictions before scoring once---per-fold scoring is
+undefined here, since a held-out ordered pair contains a single class.
+Complex-B gives $0.5000$ (ordered-pair $K$-fold), $0.6250$ (unordered-pair
+$K$-fold), $0.5875$ (exhaustive leave-one-ordered-pair-out), $0.3750$
+(exhaustive leave-one-unordered-group-out) and $0.4979$ when a token is
+excluded from training entirely. None of these is distinguishable from chance
+at this sample size, and their non-monotone ordering should not be
+interpreted.
+
+One grouped value does require explanation. The digital bilinear baseline
+reaches $0.8125$ under ordered-pair grouping, above Complex-B. This is a
+leakage artefact with an exact mechanism: the feature $z(x)\odot z(y)$ is
+algebraically symmetric, so when $(x,y)$ is held out its mirror $(y,x)$
+remains in training with a numerically identical feature vector. Removing the
+mirror as well collapses it to $0.0625$. Complex-B, whose measured
+swap-conjugate correlation is $0.60$ (Sec.~\ref{sec:ideal}), leaks partially
+by the same route: $0.5875$ under ordered grouping against $0.3750$ once
+mirrors are grouped together.
+
+Two caveats bound these numbers. First, with 16 distinct pairs and 80 samples,
+exhaustive leave-one-out is dominated by design artefacts: the concatenation
+baseline scores exactly $0.0000$ under both exhaustive regimes, the signature
+of anti-learning induced by removing a sample from a balanced design rather
+than a meaningful below-chance result. Second, the task admits strong
+non-optical structural rules. Because every self-pair is negative, the
+measurement-free rule ``negative if $x=y$, positive otherwise'' attains
+balanced accuracy $0.7500$; and if each token's parity group is read from its
+index, the relation is determined exactly with no optical measurement at all.
+
+Finally, we enumerate all three ways to divide four tokens into two unlabelled
+groups of two. Under the same grouped evaluation the designated parity
+assignment scores $0.6250$, equal to one alternative and below the remaining
+assignment at $0.7125$. With only three admissible assignments this is
+descriptive rather than inferential, but it supplies no evidence that the
+designated parity structure is preferentially represented.
+
+The mathematical statement that multiplicative features represent XOR where an
+additive linear readout cannot is not in dispute, and we do not claim that
+Complex-B lacks bilinear information. What the released experiment does not
+establish is that the measured field supplies a generalisable XOR interaction
+rather than a stable identifier of the 16 observed pairs.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{fig5_xor_splits.pdf}
+\caption{\textbf{The XOR result depends on the unit of generalisation.}
+Balanced accuracy on the parity relation under six splitting regimes, ordered
+from the released sample-level split (repeats of a pair split across folds) to
+leave-one-token-out. Shaded band marks $\pm0.06$ around chance. The
+digital-bilinear peak at exhaustive ordered-pair grouping is a mirror-pair
+leakage artefact: $z(x)\odot z(y)$ is symmetric, so the held-out pair's mirror
+carries an identical feature vector. Lines join points of the same feature
+family and do not imply a continuum.}
+\label{fig:xor}
+\end{figure}
 
 \section{Model--measurement consistency: a diagnostic observation}
 \label{sec:ideal}

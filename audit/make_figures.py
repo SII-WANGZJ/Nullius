@@ -258,6 +258,53 @@ def fig4_permutation_null(struct):
     print("wrote", out)
 
 
+def fig5_xor(x):
+    """XOR Task B across splitting regimes with different generalisation units."""
+    AQUA = "#1baf7a"                     # categorical slot 3
+    regimes = [
+        ("sample\nlevel", "sample_level", None),
+        ("ordered pair\n(K-fold)", "ordered_pair_grouped", None),
+        ("unordered pair\n(K-fold)", "unordered_pair_grouped", None),
+        ("ordered pair\n(exhaustive)", None, "leave_one_ordered_pair_out"),
+        ("unordered group\n(exhaustive)", None, "leave_one_unordered_group_out"),
+        ("leave one\ntoken out", "leave_one_token_out", None),
+    ]
+    fams = [("complex_B", "Complex-B", BLUE, "o"),
+            ("digital_bilinear", "Digital bilinear", ORANGE, "s"),
+            ("concat", "Concat", AQUA, "^")]
+
+    tb, ex = x["X1_X3_X8_taskB"], x["X9_X10_exhaustive"]
+    xs = np.arange(len(regimes))
+    fig, ax = plt.subplots(figsize=(6.9, 3.0))
+    ax.axhspan(0.44, 0.56, color=GRID, alpha=0.55, zorder=1)
+    ax.axhline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
+    ax.text(len(regimes) - 0.52, 0.505, "chance", color=MUTED, fontsize=6.5,
+            ha="right", va="bottom")
+
+    for key, label, col, mk in fams:
+        ys = []
+        for _, k1, k2 in regimes:
+            v = tb[key][k1] if k1 else ex[key][k2]
+            ys.append(np.nan if v is None else v)
+        ys = np.array(ys, dtype=float)
+        ax.plot(xs, ys, color=col, lw=1.2, alpha=0.45, zorder=3)
+        ax.plot(xs, ys, marker=mk, ms=7, mec=SURFACE, mew=1.2, ls="none",
+                color=col, zorder=4, label=label)
+
+    ax.set_xticks(xs, [r[0] for r in regimes], fontsize=6.8, color=INK2)
+    ax.set_ylim(-0.04, 1.06)
+    ax.set_ylabel("balanced accuracy, XOR relation (Task B)", fontsize=7.5)
+    ax.set_xlim(-0.5, len(regimes) - 0.4)
+    style_axes(ax, xgrid=False)
+    ax.legend(frameon=False, fontsize=7.5, labelcolor=INK2, ncol=3,
+              loc="lower center", bbox_to_anchor=(0.45, -0.36), handlelength=1.0)
+    fig.tight_layout()
+    out = os.path.join(FIG_DIR, "fig5_xor_splits.pdf")
+    fig.savefig(out, bbox_inches="tight")
+    plt.close(fig)
+    print("wrote", out)
+
+
 if __name__ == "__main__":
     audit = load("audit_results.json")
     robust = load("robustness_results.json")
@@ -266,3 +313,4 @@ if __name__ == "__main__":
     fig2_leakage(audit, robust)
     fig3_repeat_correlation()
     fig4_permutation_null(struct)
+    fig5_xor(load("xor_audit_results.json"))
