@@ -44,21 +44,30 @@ repeat to the physical pair and:
 
 | | released split | pair-respecting split |
 |---|---|---|
-| Task C (16-way category pair) | 1.0000 | **0.0474** — below the 0.0625 chance level |
+| Task C (16-way category pair) | 1.0000 | **0.0474** — at or below the 0.0625 chance level |
 | Task A (16/64-way pair identity) | 1.0000 | **degenerate by construction** — each class is one group |
 | XOR showcase | 1.0000 | **not retained** under any pair-respecting split |
-| Task D (held-out category) | 0.7292 | **0.4979** once self-pairs are removed |
+| Task D (held-out category, refined protocol) | 0.7292 | **0.4979** once self-pairs are removed |
+
+These are point estimates against the stated chance reference; no significance
+is claimed for any of them, and the test sets differ in size and dependence
+structure, so they are not pooled.
 
 For Task D a measurement-free rule — *same category if and only if `x == y`*,
-using the pair labels and no optical data whatsoever — scores **0.750**, above
-every value the optical feature attains under that protocol.
+using the pair labels and no optical data whatsoever — scores **0.750**, at or
+above every value the optical feature attains under the refined
+held-out-category protocol reported here. We do not extend that comparison to
+the main manuscript's different fixed-holdout protocol, nor to the higher
+values (0.772–0.780) the supplement obtains under searched sparse-tap and
+output-budget configurations.
 
 ## Verify it yourself
 
 That is the point of the repository, and it takes about two minutes.
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt          # or -r requirements-lock.txt for the
+                                         # exact versions the numbers were run on
 
 # put the Zenodo deposit under data/  (see data/README.md), then:
 python experiments/01_replicate_and_ablate.py
@@ -97,7 +106,7 @@ means anything.
 |----|---------|
 | **B1** | The eight "semantic" tokens are seeded uniform random phase vectors; the words and categories are labels attached to them. The authors' Report 4 lists this mapping as arbitrary — we take that premise from them and differ on the inference drawn from it. |
 | **B2** | Task D is accounted for by self-pairs: above chance only when self-pairs are present in **both** training and test. |
-| **B3** | Tasks A–C depend on repeat-level splitting. Repeat correlation mean 0.9828, yet repeats span folds. |
+| **B3** | Tasks A–C depend on repeat-level splitting, relative to a claim of out-of-pair or semantic generalisation. Repeat correlation mean 0.9828, yet repeats span folds. |
 | **B4** | The residual pair-grouped Task-B accuracy is not exceptional. Enumerating **all 105** admissible category assignments exactly gives **p = 102/105**. |
 | **B5** | The Task-D shortcut is learned, not merely present. |
 | **B6** | The XOR showcase tests repeat recognition. Its digital-bilinear baseline scores 0.8125 through **mirror-pair leakage** — `z(x)⊙z(y)` is symmetric, so a held-out pair's mirror is a numerically identical training vector; grouping mirrors together collapses it to 0.0625. |
@@ -111,8 +120,9 @@ We ask the audited work for pre-registration, so we state our own.
 The **XOR audit was pre-specified**: the ten tests, the splitting regimes, and
 the commitment to publish all three possible outcomes were written into
 [`docs/PRE_REGISTRATION.md`](docs/PRE_REGISTRATION.md) and committed before it
-ran. The semantic-benchmark analyses were **exploratory**, developed while
-reading the released code. The manuscript says so, in §2.
+ran, at pre-analysis commit `fcff795`. The semantic-benchmark analyses were
+**exploratory**, developed while reading the released code. The manuscript
+says so, in §2.
 
 ## What this audit does not claim
 
@@ -129,8 +139,9 @@ reading the released code. The manuscript says so, in §2.
   specific combination was not resolved by this scoped audit. See
   [`docs/PRIOR_ART_MATRIX.md`](docs/PRIOR_ART_MATRIX.md).
 
-The findings are about evidential attribution, not about whether the platform
-produces repeatable optical measurements. It does.
+The findings are about evidential attribution. The inspected Result-4
+measurements are internally consistent and highly correlated across repeats;
+the hardware platform as a whole was not audited.
 
 ## Layout
 
