@@ -72,8 +72,7 @@ output-budget configurations.
 That is the point of the repository, and it takes about two minutes.
 
 ```bash
-pip install -r requirements.txt          # or -r requirements-lock.txt for the
-                                         # exact versions the numbers were run on
+pip install -r requirements.txt          # the exact versions the numbers were run on
 
 # put the Zenodo deposit under data/  (see data/README.md), then:
 python experiments/01_replicate_and_ablate.py
@@ -111,11 +110,11 @@ means anything.
 | ID | Finding |
 |----|---------|
 | **B1** | The eight "semantic" tokens are seeded uniform random phase vectors; the words and categories are labels attached to them. The authors' Report 4 lists this mapping as arbitrary — we take that premise from them and differ on the inference drawn from it. |
-| **B2** | Task D is accounted for by self-pairs: above chance only when self-pairs are present in **both** training and test. |
+| **B2** | Task D is explained by self-pairs: the point estimate exceeds 0.500 only when self-pairs are present in **both** training and test. |
 | **B3** | Tasks A–C depend on repeat-level splitting, relative to a claim of out-of-pair or semantic generalisation. Repeat correlation mean 0.9828, yet repeats span folds. |
 | **B4** | The residual pair-grouped Task-B accuracy is not exceptional. Enumerating **all 105** admissible category assignments exactly gives **p = 102/105**. |
 | **B5** | The Task-D shortcut is learned, not merely present. |
-| **B6** | The XOR showcase tests repeat recognition. Its digital-bilinear baseline scores 0.8125 through **mirror-pair leakage** — `z(x)⊙z(y)` is symmetric, so a held-out pair's mirror is a numerically identical training vector; grouping mirrors together collapses it to 0.0625. |
+| **B6** | The XOR evaluation tests repeat recognition. Its digital-bilinear baseline scores 0.8125 through **mirror-pair leakage** — `z(x)⊙z(y)` is symmetric, so a held-out pair's mirror is a numerically identical training vector; grouping mirrors together collapses it to 0.0625. |
 | **O1** | The operator-matched control is absent. The released "digital bilinear" is an intensity product; pseudo-B randomises `T`. Neither reconstructs `A_x* ⊙ A_y` from separately measured complex fields. |
 | **P1** | No backbone model, prompts, agent trace, intervention log or engine code appears anywhere in the deposit. |
 
@@ -137,7 +136,7 @@ says so, in §2.
 - **The hardware automation is not evaluated here.** It may well be
   substantial; the materials needed to assess it are not public and we did not
   audit it.
-- **Results 2 and 3** of the target work — the transmission-matrix
+- **Results 2 and 3** of the audited work — the transmission-matrix
   reproduction and the majorization-order study — were **not audited**, and no
   conclusion is drawn about them either way.
 - **Physical novelty is *not established*, which is not the same as absent.**
@@ -166,7 +165,7 @@ manuscript already answers. It is not part of the paper.
 
 ## Citing
 
-See [`CITATION.cff`](CITATION.cff). Please cite the target preprint and the
+See [`CITATION.cff`](CITATION.cff). Please cite the audited preprint and the
 Zenodo deposit alongside this repository.
 
 ## Licence
