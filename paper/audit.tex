@@ -50,8 +50,8 @@ Large language model (LLM) agents are increasingly reported to have
 \emph{discovered} scientific results rather than merely to have executed
 them. Such attributions are hard to evaluate, because the artefact produced by
 discovery and the artefact produced by retrieval-plus-execution are the same
-artefact. We set out five minimum reporting and control requirements that
-would make the distinction assessable, and apply them to a recent, prominent
+artefact. We organise an audit around five reporting and control requirements
+that bear on the distinction, and apply it to a recent, prominent
 claim: an LLM agent reported to have autonomously proposed and experimentally
 validated a previously unreported optical mechanism, an ``optical bilinear
 interaction'' analogous to the compatibility operation in Transformer
@@ -112,9 +112,9 @@ generally not inspectable by readers. Attribution therefore cannot rest on the
 output alone; it has to rest on controls and disclosures that conventional
 reporting was never designed to supply.
 
-We propose five such requirements (Sec.~\ref{sec:probe}) as a minimal starting
-set of reporting and control obligations, and then apply them to a recent and
-prominent claim~\cite{qiushi} (Secs.~\ref{sec:setup}--\ref{sec:provenance}).
+We organise the audit around five such requirements (Sec.~\ref{sec:probe}) and
+apply them to a recent and prominent claim~\cite{qiushi}
+(Secs.~\ref{sec:setup}--\ref{sec:provenance}).
 The application is instructive beyond the individual case: several of the
 central evaluation limitations become visible only when the released split and
 label logic are re-executed under alternative units of generalisation. That
@@ -190,16 +190,24 @@ Results 2 and 3 (transmission matrix, majorization) & ---
 \subsection{Audit criteria}
 \label{sec:probe}
 
-We audit against five requirements, referred to below as \textsc{Probe} and
-stated in full in Appendix~\ref{app:probe}: \emph{Provenance} disclosure
-sufficient to make a causal attribution formulable; \emph{Replication} across
-independent runs; \emph{Operator-matched} controls, in which the comparison is
-the same quantity under the same operator rather than a different quantity;
-\emph{Benchmark} integrity, meaning that the evaluation possesses the structure
+We organise the audit around five reporting and control requirements, stated
+in full in Appendix~\ref{app:probe}: \emph{provenance} disclosure sufficient to
+make a causal attribution formulable; \emph{replication} across independent
+runs; \emph{operator-matched} controls, in which the comparison is the same
+quantity under the same operator rather than a different quantity;
+\emph{benchmark} integrity, meaning that the evaluation possesses the structure
 it purports to measure and that its partitions respect the unit of
-generalisation; and \emph{Evaluation} pre-registration, or full disclosure of
-the search when choices were not fixed in advance. They are proposed as a
-minimal starting set, not a sufficient one.
+generalisation; and \emph{evaluation} pre-specification, or full disclosure of
+the search when choices were not fixed in advance. For convenience we refer to
+them collectively as PROBE.
+
+PROBE is used here as an organising checklist for a single case study. It is
+not offered as a validated benchmark, nor as a sufficient standard for
+autonomous scientific discovery: it has been applied to one paper, its items
+have not been tested for necessity or for inter-auditor agreement, and it has
+not been compared systematically with existing reporting checklists. What the
+present work establishes is the audit of Sec.~\ref{sec:benchmark}, not the
+general adequacy of the list used to organise it.
 
 \subsection{Scope, and what we do not claim}
 \label{sec:scope}\label{sec:caveats}
