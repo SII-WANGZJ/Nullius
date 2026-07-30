@@ -413,7 +413,7 @@ represented in training in all cases.}
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.56\linewidth]{fig3_repeat_correlation.pdf}
+\includegraphics[width=0.68\linewidth]{fig3_repeat_correlation.pdf}
 \caption{\textbf{Physical repeats are near-duplicates.} Distribution of
 pairwise correlations between the five repeated measurements of the Complex-B
 feature, over all 64 ordered pairs at $\mathrm{bin}=25$. Under the released
@@ -694,6 +694,11 @@ measured~\cite{popoff}. Obtaining a product of two encoded optical fields by
 square-law detection is an established route to optical
 multiplication~\cite{hamerly}. Using a fixed scattering medium as a random
 feature map is the basis of optical reservoir computing~\cite{rafayelyan}.
+Optically correlating or convolving two inputs, with the wanted term arising in
+a square-law-detected joint spectrum, has been established since the
+1960s~\cite{vanderlugt,weaver}; we cite these as evidence that the general
+practice is long-standing, not as evidence of equivalence to the present
+apparatus, whose operator, output representation and purpose differ.
 Establishing physical novelty therefore requires identifying which property of
 the combination was absent from prior optical correlators, scattering-based
 processors and coherent multiplication architectures---a determination the
@@ -723,7 +728,7 @@ dispute it at that level.
 
 The differences are the substance. $W_Q$ and $W_K$ are learned, may be
 distinct, and their product is a general matrix; $K_k$ is fixed by the medium
-and is not adjustable at all. Under the ideal shared-operator model each
+during the reported experiment and is not learned end-to-end. Under the ideal shared-operator model each
 unbinned $K_p$ is a rank-one positive semidefinite outer product and a binned
 $K_k$ is a finite sum of such terms, so the realisable operator family is a
 restricted subclass rather than a general learnable bilinear map---though, as
@@ -736,14 +741,15 @@ linear classifier applied digitally to the measured features.
 
 The defensible reading is therefore that the experiment demonstrates a
 restricted physical pair-feature primitive, not an implementation of
-Transformer attention and not attention hardware. Existing photonic-attention
-work supplies the relevant category distinction: implementing a bilinear
-primitive is not the same as implementing an attention layer, which ordinarily
-requires programmable projections, formation of a score structure,
-normalisation or an explicit substitute for it, and value-side processing. We
-do not enter those systems as comparanda here, since a like-for-like
-comparison would require throughput and energy figures that the target work
-does not report.
+Transformer attention and not attention hardware. Proposed photonic
+self-attention architectures supply the relevant category
+distinction~\cite{lightening}: implementing a bilinear primitive is not the
+same as implementing an attention layer, which ordinarily requires
+programmable projections, formation of a score structure, normalisation or an
+explicit substitute for it, and value-side processing. We cite that work as an
+architecture proposal, not as measured hardware, and we do not enter such
+systems as comparanda, since a like-for-like comparison would require
+throughput and energy figures that the target work does not report.
 
 \subsection{Scale, effective dimensionality, and unmeasured outlooks}
 
@@ -847,7 +853,10 @@ outcome. What the record does establish is that the reported configuration was
 selected from a searched space without an independent confirmation set. This
 is adaptive evaluation, and the standard remedy---pre-registration of the
 readout parameters and splits, or a held-out physical realisation on which the
-selected configuration is evaluated once---was not applied.
+selected configuration is evaluated once---was not applied. The distinction
+being drawn is the exploratory/confirmatory one, and pre-registration is the
+instrument that makes it inspectable rather than a matter of
+assertion~\cite{nosek}.
 
 \begin{table}[!htbp]
 \centering\small
@@ -1029,7 +1038,7 @@ not available to the model or its operators beforehand.
 \label{sec:ideal}\label{app:ideal}
 
 This section is diagnostic rather than evaluative. It bears on neither the
-benchmark failures of Sec.~\ref{sec:benchmark} nor the central attribution
+benchmark findings of Sec.~\ref{sec:benchmark} nor the central attribution
 question, and we report it because it constrains what the released estimator
 can be assumed to satisfy.
 
@@ -1166,6 +1175,29 @@ four direct dependencies with minimum versions.
   \emph{Large-scale optical reservoir computing for spatiotemporal chaotic
   systems prediction}, Phys.\ Rev.\ X \textbf{10}, 041037 (2020).
   % supports: a fixed scattering medium as a random feature map.
+\bibitem{nosek} B.~A.~Nosek, C.~R.~Ebersole, A.~C.~DeHaven and D.~T.~Mellor,
+  \emph{The preregistration revolution}, Proc.\ Natl.\ Acad.\ Sci.\ USA
+  \textbf{115}, 2600--2606 (2018).
+  % supports: the exploratory/confirmatory distinction and pre-registration as
+  % the instrument that makes it inspectable.
+
+\bibitem{vanderlugt} A.~Vander~Lugt,
+  \emph{Signal detection by complex spatial filtering}, IEEE Trans.\ Inf.\
+  Theory \textbf{10}, 139--145 (1964).
+  % supports: optical correlation as long-established practice. Not cited as
+  % equivalent to the present apparatus.
+\bibitem{weaver} C.~S.~Weaver and J.~W.~Goodman,
+  \emph{A technique for optically convolving two functions}, Appl.\ Opt.\
+  \textbf{5}, 1248--1249 (1966).
+  % supports: two data inputs present simultaneously, wanted term arising in a
+  % square-law-detected joint spectrum. Same caveat as above.
+\bibitem{lightening} H.~Zhu \emph{et al.},
+  \emph{Lightening-Transformer: a dynamically-operated, optically
+  interconnected photonic transformer accelerator}, in Proc.\ IEEE Int.\ Symp.\
+  High-Performance Computer Architecture (HPCA) (2024).
+  % supports: what a full attention layer requires. Cited as an architecture
+  % proposal, not as measured hardware; no performance figure is used.
+
 \bibitem{popoff} S.~M.~Popoff \emph{et al.},
   \emph{Measuring the transmission matrix in optics}, Phys.\ Rev.\ Lett.\
   \textbf{104}, 100601 (2010).
