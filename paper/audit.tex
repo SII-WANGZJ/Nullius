@@ -13,8 +13,9 @@
 \newcommand{\code}[1]{\texttt{\small #1}}
 \newcommand{\target}{arXiv:2604.27092}
 
-\title{\bfseries Auditing a claim of autonomous scientific discovery:\\
-benchmark integrity, evaluation units, and evidential scope}
+\title{\bfseries Nullius: auditing a claim of autonomous scientific
+discovery\\[2pt]
+\large benchmark integrity, evaluation units, and evidential scope}
 
 \author{Zhengjie Wang\\[2pt]
 \small Shanghai Innovation Institute\\
@@ -560,13 +561,16 @@ rather than a stable identifier of the 16 observed pairs.
 \centering
 \includegraphics[width=\linewidth]{fig5_xor_splits.pdf}
 \caption{\textbf{The XOR result depends on the unit of generalisation.}
-Balanced accuracy on the parity relation under six splitting regimes, ordered
-from the released sample-level split (repeats of a pair split across folds) to
-leave-one-token-out. Shaded band marks $\pm0.06$ around chance. The
-digital-bilinear peak at exhaustive ordered-pair grouping is a mirror-pair
-leakage artefact: $z(x)\odot z(y)$ is symmetric, so the held-out pair's mirror
-carries an identical feature vector. Lines join points of the same feature
-family and do not imply a continuum.}
+Balanced accuracy on the parity relation under six splitting regimes, from the
+released sample-level split (repeats of a pair split across folds) to
+leave-one-token-out. The regimes are categorical and are deliberately not
+joined by lines; markers are offset vertically within each row so that
+coincident values remain visible---at sample level both bilinear families sit
+at $1.0000$. The digital-bilinear value at exhaustive ordered-pair grouping is
+a mirror-pair leakage artefact: $z(x)\odot z(y)$ is symmetric, so the held-out
+pair's mirror carries an identical feature vector. Point estimates are shown
+against a $0.500$ reference with no uncertainty band, since the regimes differ
+in test-set size and dependence structure.}
 \label{fig:xor}
 \end{figure}
 

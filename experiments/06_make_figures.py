@@ -275,29 +275,36 @@ def fig5_xor(x):
             ("concat", "Concat", AQUA, "^")]
 
     tb, ex = x["X1_X3_X8_taskB"], x["X9_X10_exhaustive"]
-    xs = np.arange(len(regimes))
-    fig, ax = plt.subplots(figsize=(6.9, 3.0))
-    ax.axhline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
-    ax.text(len(regimes) - 0.52, 0.508, "chance", color=MUTED, fontsize=6.5,
-            ha="right", va="bottom")
+    # Horizontal dot plot: the x-axis of regimes is categorical, so connecting
+    # lines would imply a trend that does not exist. Rows keep the long regime
+    # names legible and remove every line crossing.
+    ys = np.arange(len(regimes))[::-1]
+    fig, ax = plt.subplots(figsize=(6.5, 3.1))
 
-    for key, label, col, mk in fams:
-        ys = []
-        for _, k1, k2 in regimes:
-            v = tb[key][k1] if k1 else ex[key][k2]
-            ys.append(np.nan if v is None else v)
-        ys = np.array(ys, dtype=float)
-        ax.plot(xs, ys, color=col, lw=1.2, alpha=0.45, zorder=3)
-        ax.plot(xs, ys, marker=mk, ms=7, mec=SURFACE, mew=1.2, ls="none",
-                color=col, zorder=4, label=label)
+    for yy in ys:                                   # one recessive rule per row
+        ax.plot([0, 1.02], [yy, yy], color=GRID, lw=0.8, zorder=1)
+    ax.axvline(0.5, color=MUTED, lw=1.0, ls=(0, (4, 3)), zorder=2)
+    ax.text(0.515, len(regimes) - 0.44, "chance", color=MUTED, fontsize=6.5,
+            ha="left", va="bottom")
 
-    ax.set_xticks(xs, [r[0] for r in regimes], fontsize=6.8, color=INK2)
-    ax.set_ylim(-0.04, 1.06)
-    ax.set_ylabel("balanced accuracy, XOR relation (Task B)", fontsize=7.5)
-    ax.set_xlim(-0.5, len(regimes) - 0.4)
-    style_axes(ax, xgrid=False)
+    # Dodge within each row: families share values exactly (both bilinear
+    # features hit 1.0000 at sample level), so coincident markers must not
+    # hide one another.
+    dodge = {0: 0.19, 1: 0.0, 2: -0.19}
+    for i, (key, label, col, mk) in enumerate(fams):
+        vals = [tb[key][k1] if k1 else ex[key][k2] for _, k1, k2 in regimes]
+        vals = np.array([np.nan if v is None else v for v in vals], dtype=float)
+        ax.plot(vals, ys + dodge[i], marker=mk, ms=6.5, mec=SURFACE, mew=1.3,
+                ls="none", color=col, zorder=4, label=label)
+
+    ax.set_yticks(ys, [r[0].replace("\n", " ") for r in regimes],
+                  fontsize=7.5, color=INK2)
+    ax.set_xlim(-0.03, 1.05)
+    ax.set_ylim(-0.7, len(regimes) - 0.15)
+    ax.set_xlabel("balanced accuracy, XOR relation (Task B)", fontsize=7.5)
+    style_axes(ax)
     ax.legend(frameon=False, fontsize=7.5, labelcolor=INK2, ncol=3,
-              loc="lower center", bbox_to_anchor=(0.45, -0.36), handlelength=1.0)
+              loc="lower center", bbox_to_anchor=(0.5, -0.30), handlelength=1.0)
     fig.tight_layout()
     out = os.path.join(FIG_DIR, "fig5_xor_splits.pdf")
     fig.savefig(out, bbox_inches="tight")
