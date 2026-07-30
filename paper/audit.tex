@@ -75,7 +75,7 @@ an autonomous agent is not assessable from it---independently of the benchmark
 findings. We find no evidence in the inspected data that measurements were
 fabricated or internally inconsistent; the reported hardware automation may be
 substantial and is not evaluated here, and the two preceding studies in the
-target work were not audited.
+audited work were not examined.
 
 \vspace{0.7em}
 \noindent\textbf{Keywords:} benchmark integrity; unit of generalisation; data
@@ -206,8 +206,8 @@ reproduction (Result 2), nor have we reconstructed the full
 theory-to-measurement argument, mixed-state synthesis or uncertainty
 propagation in the majorization-order study (Result 3). We therefore draw no
 conclusion about the correctness, novelty or autonomy of those results. Their
-inclusion in the target manuscript does not, however, resolve the
-benchmark-integrity failures identified for Result 4, nor does it provide
+inclusion in the audited preprint does not, however, resolve the
+benchmark-integrity limitations identified for Result 4, nor does it provide
 evidence for the specific computational claims tested here.
 
 Our operator analysis is similarly bounded. We distinguish identities that
@@ -243,7 +243,7 @@ computational conclusion does not support it.
 \subsection{The audited experiments}
 \label{sec:setup}
 
-The target work~\cite{qiushi} couples an LLM multi-agent system to a
+Yang et al.~\cite{qiushi}, the audited work throughout, couple an LLM multi-agent system to a
 free-space optical platform and reports three studies of increasing autonomy, culminating in an
 open-ended investigation that identifies an ``optical bilinear interaction''.
 Two token-dependent fields $E_a,E_b$ are coherently superposed with controlled
@@ -253,11 +253,21 @@ camera; four-step phase-shifting demodulation with blank subtraction isolates
   B_m(a,b) \;=\; E_a^{\dagger}\,\bigl(T_m^{\dagger}T_m\bigr)\,E_b ,
   \label{eq:B}
 \end{equation}
-a per-channel complex bilinear response. The computational claim is supported
-by an eight-token ``semantic benchmark'' comprising 64 ordered pairs and four
-tasks: pair identity (A, 64-way), same category (B, binary), category pair
-(C, 16-way), and cross-split same-category generalisation to a held-out
-category (D).
+a per-channel complex bilinear response, which that work calls
+\emph{Complex-B}. The computational claim is supported by an eight-token
+``semantic benchmark'' comprising 64 ordered pairs and four tasks, named there
+as pair identity (A, 64-way), same category (B, binary), category pair (C,
+16-way), and cross-split same-category generalisation to a held-out category
+(D). We keep these names throughout, and mark terms of our own where they
+first appear.
+
+Three further terms recur below. A \emph{codebook} is the fixed mapping from
+token index to the random-phase input field that encodes it. A \emph{full
+readout} uses every detector channel produced by a given binning, whereas
+\emph{sparse taps} use a selected subset of them, and the \emph{output budget}
+is the number of channels retained. \emph{Pseudo-$B$} denotes the authors'
+control in which the physical transmission operator is replaced by a random
+complex Gaussian matrix.
 
 All material below derives from the authors' own deposit
 (DOI \href{https://doi.org/10.5281/zenodo.19890402}{10.5281/zenodo.19890402}).
@@ -296,7 +306,7 @@ follows is a pipeline discrepancy.
 \section{Benchmark findings}
 \label{sec:benchmark}
 
-\subsection{B1: the benchmark carries no semantic structure}
+\subsection{The optical inputs contain no designed semantic structure}
 
 The eight tokens are constructed as
 \begin{verbatim}
@@ -328,7 +338,7 @@ held-out-category generalisation could be learned, so any above-chance Task-D
 result must be attributed to a finite-sample accident or to an evaluation cue,
 rather than to encoded semantics recovered by the measurement.
 
-\subsection{B2: Task D is accounted for by self-pairs}
+\subsection{Task D is explained by self-pairs}
 
 For each held-out category the test set contains 4 distinct positive pairs, of
 which 2 are self-pairs $(x,x)$, against 24 distinct negatives. The
@@ -366,7 +376,7 @@ unaffected by the ablation.}
 \label{fig:D}
 \end{figure}
 
-\subsection{B3: Tasks A--C depend on repeat-level splitting}
+\subsection{Tasks A--C depend on repeat-level splitting}
 \label{sec:B3}
 
 Leakage of this kind---correlated repeated measurements of the same unit
@@ -390,8 +400,11 @@ measurement.
 Re-scoring with \code{StratifiedGroupKFold} grouped by ordered pair gives
 Table~\ref{tab:ABC} and Fig.~\ref{fig:leak}. Pair identity is not evaluable as
 an out-of-pair generalisation task when the ordered pair is the grouping unit,
-because each 64-way class corresponds to exactly one group; and Task C falls
-to or below the 16-class chance level of $0.0625$. We verified that the Task-C collapse is not
+because each 64-way class corresponds to exactly one group. Task C decreases
+from $1.0000$ to $0.0474$ under the primary pair-grouped analysis; across the
+fold-count sweep the point estimates range from $0.043$ to $0.109$, against a
+16-class reference of $0.0625$. We do not interpret these small-sample point
+estimates as significantly above or below that reference. We verified that the Task-C collapse is not
 an artefact of the fold count: across $n_{\text{splits}}\in\{2,4,5,8\}$ every
 test class is represented in training ($100\%$) and accuracy remains in
 $0.043$--$0.109$ at both readouts (Fig.~\ref{fig:leak}c).
@@ -438,7 +451,7 @@ Digital bilinear & C (16-way)  & 0.4437 & 0.1709 & $-0.2729$ \\
 \end{tabular}
 \end{table}
 
-\subsection{B4: the residual Task-B accuracy is not significant}
+\subsection{The designated Task-B partition is not exceptional}
 \label{sec:B4}
 
 Pair-grouped scoring leaves Task B at $0.6522$, above the binary chance level.
@@ -472,7 +485,7 @@ designated semantic assignment lies in the lower tail.}
 \label{fig:perm}
 \end{figure}
 
-\subsection{B5: the Task-D shortcut is learned, not merely present}
+\subsection{The Task-D shortcut is learned}
 
 Removing self-pairs from the training set and from the test set are distinct
 interventions, and crossing them separates a cue that the classifier acquires
@@ -505,8 +518,7 @@ removed & removed & 0.4979 & 10 / 120 \\
 \end{tabular}
 \end{table}
 
-\subsection{B6: the XOR showcase tests repeat recognition, not relation
-generalisation}
+\subsection{The XOR evaluation tests repeat recognition}
 \label{sec:xor}
 
 The four-token XOR showcase is the second experiment used to support the
@@ -546,8 +558,8 @@ $0.500$ reference. Their test sets differ in size and in dependence structure,
 so we neither pool them nor attach a common uncertainty band, and their
 non-monotone ordering should not be interpreted. What they share is that the
 released value of $1.0000$ is not retained once repeated observations of the
-test pair are excluded from training, and that no above-chance transfer is
-observed under any of them.
+test pair are excluded from training, and that none of these small-sample
+evaluations establishes above-chance transfer.
 
 One grouped value does require explanation. The digital bilinear baseline
 reaches $0.8125$ under ordered-pair grouping, above Complex-B. This is a
@@ -693,9 +705,8 @@ measured~\cite{popoff}. Obtaining a product of two encoded optical fields by
 square-law detection is an established route to optical
 multiplication~\cite{hamerly}. Using a fixed scattering medium as a random
 feature map is the basis of optical reservoir computing~\cite{rafayelyan}.
-Optically correlating or convolving two inputs, with the wanted term arising in
-a square-law-detected joint spectrum, has been established since the
-1960s~\cite{vanderlugt,weaver}; we cite these as evidence that the general
+Optical convolution and correlation of two inputs have been established since
+the 1960s~\cite{vanderlugt,weaver}; we cite these as evidence that the general
 practice is long-standing, not as evidence of equivalence to the present
 apparatus, whose operator, output representation and purpose differ.
 Establishing physical novelty therefore requires identifying which property of
@@ -748,7 +759,7 @@ programmable projections, formation of a score structure, normalisation or an
 explicit substitute for it, and value-side processing. We cite that work as an
 architecture proposal, not as measured hardware, and we do not enter such
 systems as comparanda, since a like-for-like comparison would require
-throughput and energy figures that the target work does not report.
+throughput and energy figures the released analysis does not report.
 
 \subsection{Scale, effective dimensionality, and unmeasured outlooks}
 
@@ -757,7 +768,7 @@ The released computational demonstration contains eight fixed tokens and
 64 ordered pairs, all derived from one deterministic random-phase codebook.
 It therefore does not test generalisation to a larger vocabulary, to newly
 encoded tokens, to another random codebook, or to an independently acquired
-physical operator. The target work itself identifies vocabulary scale as a
+physical operator. The Result-4 study itself identifies vocabulary scale as a
 limitation and notes, in the authors' released Report 4, that a related
 token-family representation previously exhibited degeneracy-boundary collapse
 at $N=16$.
@@ -930,7 +941,7 @@ optical stage improves on an operator-matched digital reconstruction, or
 permit the origin of the scientific interpretation to be distinguished among
 model prior knowledge, agent-level synthesis and human steering.
 
-The deficiencies are resolvable. They require different evidence for the
+These evidential limitations are addressable. They require different evidence for the
 computational, physical, and autonomy claims; no single additional accuracy
 value would address all three.
 
@@ -1178,20 +1189,22 @@ subsequent change to it is detectable.
 
 \bibitem{vanderlugt} A.~Vander~Lugt,
   \emph{Signal detection by complex spatial filtering}, IEEE Trans.\ Inf.\
-  Theory \textbf{10}, 139--145 (1964).
-  % supports: optical correlation as long-established practice. Not cited as
-  % equivalent to the present apparatus.
+  Theory \textbf{10}, 139--145 (1964). doi:10.1109/TIT.1964.1053650.
+  % supports (headline only): optical correlation as long-established
+  % practice. NOT cited for any device-level correspondence.
 \bibitem{weaver} C.~S.~Weaver and J.~W.~Goodman,
   \emph{A technique for optically convolving two functions}, Appl.\ Opt.\
-  \textbf{5}, 1248--1249 (1966).
-  % supports: two data inputs present simultaneously, wanted term arising in a
-  % square-law-detected joint spectrum. Same caveat as above.
+  \textbf{5}, 1248--1249 (1966). doi:10.1364/AO.5.001248.
+  % supports (headline only): optical convolution of two inputs. NOT cited for
+  % the form of the recovered term; that would need full-text verification.
 \bibitem{lightening} H.~Zhu \emph{et al.},
   \emph{Lightening-Transformer: a dynamically-operated, optically
   interconnected photonic transformer accelerator}, in Proc.\ IEEE Int.\ Symp.\
-  High-Performance Computer Architecture (HPCA) (2024).
-  % supports: what a full attention layer requires. Cited as an architecture
-  % proposal, not as measured hardware; no performance figure is used.
+  High-Performance Computer Architecture (HPCA), 686--703 (2024).
+  doi:10.1109/HPCA57654.2024.00059.
+  % supports: what a full attention layer requires. An accelerator proposal
+  % evaluated in simulation, not a fabricated and measured photonic
+  % Transformer chip; no performance figure of theirs is used here.
 
 \bibitem{popoff} S.~M.~Popoff \emph{et al.},
   \emph{Measuring the transmission matrix in optics}, Phys.\ Rev.\ Lett.\
