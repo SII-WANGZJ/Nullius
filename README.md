@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="paper/audit.pdf"><img alt="manuscript" src="https://img.shields.io/badge/manuscript-PDF-1b4b91"></a>
+  <a href="paper/nullius.pdf"><img alt="manuscript" src="https://img.shields.io/badge/manuscript-PDF-1b4b91"></a>
   <a href="https://arxiv.org/abs/2604.27092"><img alt="target" src="https://img.shields.io/badge/audited-arXiv%3A2604.27092-6b6b6b"></a>
   <a href="https://doi.org/10.5281/zenodo.19890402"><img alt="deposit" src="https://img.shields.io/badge/deposit-10.5281%2Fzenodo.19890402-6b6b6b"></a>
   <a href="LICENSE"><img alt="licence" src="https://img.shields.io/badge/code-MIT-2a7f4f"></a>

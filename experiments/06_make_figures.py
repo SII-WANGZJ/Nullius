@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-make_figures.py -- render the audit figures for paper/audit.tex.
+make_figures.py -- render the figures for paper/nullius.tex.
 
 Reads results/audit_results.json and results/robustness_results.json;
 writes vector PDFs into ../paper/figs/.  No numbers are hard-coded here:
