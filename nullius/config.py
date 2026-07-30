@@ -32,7 +32,7 @@ INPUT_DIM = 36
 
 # --- paths ------------------------------------------------------------------
 PKG_DIR = os.path.dirname(os.path.abspath(__file__))
-REPO_DIR = os.path.dirname(os.path.dirname(PKG_DIR))
+REPO_DIR = os.path.dirname(PKG_DIR)
 
 #: The authors' deposit (DOI 10.5281/zenodo.19890402), unpacked beside the repo.
 #: Not redistributed here; see results/input_manifest.json for per-file digests.

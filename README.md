@@ -1,95 +1,151 @@
-# nullius
+<h1 align="center">nullius</h1>
 
-*Nullius in verba* — on the word of no one.
+<p align="center">
+  <em>Nullius in verba</em> — on the word of no one.
+</p>
 
-A reproducible audit of the computational claims in **arXiv:2604.27092**,
-*End-to-end autonomous scientific discovery on a real optical platform*.
-
-The audit consumes **only the authors' own public deposit**
-([DOI 10.5281/zenodo.19890402](https://doi.org/10.5281/zenodo.19890402)).
-No new measurements were made, and the deposit is **not redistributed** here —
-`results/input_manifest.json` records a SHA-256 for every file consumed.
-
-Manuscript: [`paper/audit.pdf`](paper/audit.pdf)
+<p align="center">
+  <a href="paper/audit.pdf"><img alt="manuscript" src="https://img.shields.io/badge/manuscript-PDF-1b4b91"></a>
+  <a href="https://arxiv.org/abs/2604.27092"><img alt="target" src="https://img.shields.io/badge/audited-arXiv%3A2604.27092-6b6b6b"></a>
+  <a href="https://doi.org/10.5281/zenodo.19890402"><img alt="deposit" src="https://img.shields.io/badge/deposit-10.5281%2Fzenodo.19890402-6b6b6b"></a>
+  <a href="LICENSE"><img alt="licence" src="https://img.shields.io/badge/code-MIT-2a7f4f"></a>
+</p>
 
 ---
 
-## Design rule
+A reproducible audit of the computational claims in **arXiv:2604.27092**,
+*End-to-end autonomous scientific discovery on a real optical platform* — a
+paper reporting that an LLM agent autonomously proposed and experimentally
+validated a previously unreported optical mechanism.
 
-`src/nullius/data.py` and `src/nullius/features.py` mirror the released
-pipeline (`05_result4_refine_paper/scripts/analyze_advantage_boundary.py`)
-exactly — same loading, binning, four-step demodulation, classifier and folds.
-Everything that departs from it lives in `src/nullius/scoring.py` and is named
-for the assumption it changes.
+**The audit uses nothing but the authors' own published data and analysis
+code.** No new measurements. The deposit is not redistributed here; every file
+consumed is recorded with its SHA-256 in
+[`results/input_manifest.json`](results/input_manifest.json).
 
-**Replication runs first.** If stage R does not reproduce the released
-accuracies, nothing downstream means anything. It currently reproduces them to
-within `5e-4`.
+## The short version
 
-## Quick start
+The released accuracies reproduce **exactly** — maximum deviation `5e-4`
+across every feature family and task. We also independently recover the
+authors' own participation-ratio effective ranks (3.00 and 9.62 against their
+stated ~3 and ~9). So nothing below is a pipeline discrepancy.
+
+Both experiments carrying the paper's computational conclusion are then scored
+under splits that place the **five repeated measurements of the same physical
+pair on both sides of the train/test boundary**, at a measured repeat
+correlation of 0.9828. Change the unit of generalisation from the camera
+repeat to the physical pair and:
+
+| | released split | pair-respecting split |
+|---|---|---|
+| Task C (16-way category pair) | 1.0000 | **0.0474** — below the 0.0625 chance level |
+| Task A (16/64-way pair identity) | 1.0000 | **degenerate by construction** — each class is one group |
+| XOR showcase | 1.0000 | **not retained** under any pair-respecting split |
+| Task D (held-out category) | 0.7292 | **0.4979** once self-pairs are removed |
+
+For Task D a measurement-free rule — *same category if and only if `x == y`*,
+using the pair labels and no optical data whatsoever — scores **0.750**, above
+every value the optical feature attains under that protocol.
+
+## Verify it yourself
+
+That is the point of the repository, and it takes about two minutes.
 
 ```bash
-conda env create -f environment.yml
-conda activate discovery-audit
+conda env create -f environment.yml && conda activate discovery-audit
+export NULLIUS_DEPOSIT=/path/to/SM_Source_Materials_CORE_5REPORTS   # from Zenodo
 
-# unpack the Zenodo deposit beside this repo, or:
-export NULLIUS_DEPOSIT=/path/to/SM_Source_Materials_CORE_5REPORTS
-
-python experiments/01_replicate_and_ablate.py   # replication + B2 + B3
-python experiments/02_robustness.py             # adversarial self-checks
-python experiments/03_structure_tests.py        # S1, exact permutation, 2x2
-python experiments/04_xor_audit.py              # pre-registered XOR audit
-python experiments/05_verify_inputs.py          # SHA-256 of every input
-python experiments/06_make_figures.py           # figures for the manuscript
+python experiments/01_replicate_and_ablate.py
 ```
 
-First run reads ~1500 `.npy` frames (~8 s per bin size); binned arrays are
-cached in `.cache/`. Results land in `results/`.
+Stage R prints the replication check against the released numbers. Stages B2
+and B3 then change one documented thing each and print what happens. The
+remaining experiments run the same way:
+
+| script | what it does |
+|---|---|
+| `01_replicate_and_ablate.py` | replication, self-pair ablation, repeat-leakage ablation |
+| `02_robustness.py` | adversarial self-checks: fold-count sweep, per-fold detail, repeat correlation |
+| `03_structure_tests.py` | exact permutation null, full 2×2 self-pair design, phase-gauge diagnostics |
+| `04_xor_audit.py` | the pre-registered XOR audit (X1–X10) |
+| `05_verify_inputs.py` | SHA-256 of every consumed input, plus a roll-up digest |
+| `06_make_figures.py` | regenerates every figure in the manuscript from `results/` |
+
+First run reads ~1500 `.npy` frames (~8 s per bin size); binned arrays cache to
+`.cache/`.
+
+## Design rule
+
+`src/nullius/data.py` and `src/nullius/features.py` **mirror the released
+pipeline exactly** — same loading, binning, four-step demodulation, classifier
+and folds as `analyze_advantage_boundary.py` in the deposit. Everything that
+departs from it lives in `src/nullius/scoring.py` and is named for the
+assumption it changes.
+
+Replication runs first, by construction. If it fails, nothing downstream
+means anything.
 
 ## Findings
 
-Replication is exact: maximum deviation from the released raw-input baselines
-is `5e-4`, and the authors' participation-ratio effective ranks are recovered
-independently (3.00 at bin 25, 9.62 at bin 10, against their stated ~3 and ~9).
-
-| ID | Finding | Where |
-|----|---------|-------|
-| **B1** | The eight "semantic" tokens are seeded uniform random phase vectors; the words and categories are labels attached to them. The authors' own Report 4 lists this mapping as arbitrary. | `features.make_token_input` |
-| **B2** | Task D is accounted for by self-pairs. The measurement-free identity rule `same_category := (x == y)` scores **0.750**. Removing self-pairs: 0.7292 → **0.4979** (bin 25), 0.7396 → **0.4948** (bin 10). | exp. 01, 03 |
-| **B3** | Tasks A–C depend on repeat-level splitting. Repeat correlation mean **0.9828**, yet repeats span folds. Pair-grouped: Task C 1.0000 → **0.0474** (below 16-class chance 0.0625); Task A degenerate by construction. | exp. 01, 02 |
-| **B4** | The residual pair-grouped Task-B accuracy is not exceptional: exact enumeration of all 105 admissible category assignments gives **p = 102/105**. | exp. 03 |
-| **B5** | The Task-D shortcut is learned, not merely present: above chance only with self-pairs in **both** train and test. | exp. 03 |
-| **B6** | The XOR showcase reproduces at 1.0000 sample-level and is not retained under any pair-respecting split. The digital-bilinear 0.8125 is mirror-pair leakage — `z(x)⊙z(y)` is symmetric, so the held-out pair's mirror is an identical training vector; grouping mirrors together collapses it to 0.0625. | exp. 04 |
-| **O1** | The operator-matched control is absent. The released "digital bilinear" is an intensity product; pseudo-B randomises `T`. Neither reconstructs `A_x* ⊙ A_y` from separately measured complex fields. | `features.build_features` |
-| **P1** | No backbone model, prompts, agent trace, intervention log or engine code anywhere in the deposit. | full-package grep |
+| ID | Finding |
+|----|---------|
+| **B1** | The eight "semantic" tokens are seeded uniform random phase vectors; the words and categories are labels attached to them. The authors' Report 4 lists this mapping as arbitrary — we take that premise from them and differ on the inference drawn from it. |
+| **B2** | Task D is accounted for by self-pairs: above chance only when self-pairs are present in **both** training and test. |
+| **B3** | Tasks A–C depend on repeat-level splitting. Repeat correlation mean 0.9828, yet repeats span folds. |
+| **B4** | The residual pair-grouped Task-B accuracy is not exceptional. Enumerating **all 105** admissible category assignments exactly gives **p = 102/105**. |
+| **B5** | The Task-D shortcut is learned, not merely present. |
+| **B6** | The XOR showcase tests repeat recognition. Its digital-bilinear baseline scores 0.8125 through **mirror-pair leakage** — `z(x)⊙z(y)` is symmetric, so a held-out pair's mirror is a numerically identical training vector; grouping mirrors together collapses it to 0.0625. |
+| **O1** | The operator-matched control is absent. The released "digital bilinear" is an intensity product; pseudo-B randomises `T`. Neither reconstructs `A_x* ⊙ A_y` from separately measured complex fields. |
+| **P1** | No backbone model, prompts, agent trace, intervention log or engine code appears anywhere in the deposit. |
 
 ## Pre-registration status
 
-The XOR audit (exp. 04) was **pre-specified**: the ten tests, the splitting
-regimes and the commitment to publish all three possible outcomes were written
-into [`docs/PRE_REGISTRATION.md`](docs/PRE_REGISTRATION.md) and committed
-before the analysis ran. The semantic-benchmark analyses were **exploratory**,
-developed while reading the released code. The manuscript says so in §2.
+We ask the audited work for pre-registration, so we state our own.
 
-## What this audit does *not* claim
+The **XOR audit was pre-specified**: the ten tests, the splitting regimes, and
+the commitment to publish all three possible outcomes were written into
+[`docs/PRE_REGISTRATION.md`](docs/PRE_REGISTRATION.md) and committed before it
+ran. The semantic-benchmark analyses were **exploratory**, developed while
+reading the released code. The manuscript says so, in §2.
 
-No evidence of fabrication. The raw frames, repeat structure and drift
-monitoring are substantial and mutually consistent. The reported hardware
-automation may be substantial and is **not evaluated here**. The two preceding
-studies in the target work (transmission-matrix reproduction, majorization
-order) were **not audited**, and no conclusion is drawn about them.
+## What this audit does not claim
+
+- **No evidence of fabrication.** The raw frames, repeat structure and drift
+  monitoring are substantial and mutually consistent.
+- **The hardware automation is not evaluated here.** It may well be
+  substantial; the materials needed to assess it are not public and we did not
+  audit it.
+- **Results 2 and 3** of the target work — the transmission-matrix
+  reproduction and the majorization-order study — were **not audited**, and no
+  conclusion is drawn about them either way.
+- **Physical novelty is *not established*, which is not the same as absent.**
+  The demodulation ingredients have long precedent; the priority of the
+  specific combination was not resolved by this scoped audit. See
+  [`docs/PRIOR_ART_MATRIX.md`](docs/PRIOR_ART_MATRIX.md).
+
+The findings are about evidential attribution, not about whether the platform
+produces repeatable optical measurements. It does.
 
 ## Layout
 
 ```
-src/nullius/       config · data · features · scoring · figures
-experiments/       numbered, runnable, one concern each
-docs/              pre-registration · prior-art matrix · rebuttal stress test · change log
-results/           JSON output; *.reference.json are pre-refactor snapshots
-paper/             manuscript source and figures
+nullius/        config · data · features · scoring   (mirror vs. modification, separated)
+experiments/    numbered, runnable, one concern each
+docs/           pre-registration · prior-art matrix · rebuttal stress test · change log
+results/        JSON output; *.reference.json are pre-refactor snapshots
+paper/          manuscript source, figures, compiled PDF
 ```
+
+[`docs/REBUTTAL_STRESS_TEST.md`](docs/REBUTTAL_STRESS_TEST.md) argues the
+authors' side as strongly as it can be put, and marks which objections the
+manuscript already answers. It is not part of the paper.
+
+## Citing
+
+See [`CITATION.cff`](CITATION.cff). Please cite the target preprint and the
+Zenodo deposit alongside this repository.
 
 ## Licence
 
-Code: MIT. Manuscript text and figures: CC BY 4.0.
-The authors' deposit is CC BY 4.0 and is not included here.
+Code MIT, manuscript text and figures CC BY 4.0. The audited deposit
+(CC BY 4.0) is not included and must be obtained from Zenodo.
